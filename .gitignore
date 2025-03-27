@@ -175,3 +175,8 @@ cython_debug/
 
 # Dev Container
 .devcontainer/
+
+# Data Images
+data/aligned_images
+data/celeba-hq
+data/eval
