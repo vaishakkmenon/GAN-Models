@@ -177,6 +177,6 @@ cython_debug/
 .devcontainer/
 
 # Data Images
-data/aligned_images
+data/img_align_celeba.zip
+data/img_align_celeba
 data/celeba-hq
-data/eval
