@@ -1,2 +1,0 @@
-class Generator:
-    pass
