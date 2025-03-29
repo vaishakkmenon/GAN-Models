@@ -180,3 +180,4 @@ cython_debug/
 data/img_align_celeba.zip
 data/img_align_celeba
 data/celeba-hq
+data/mnist
