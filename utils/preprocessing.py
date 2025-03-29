@@ -23,7 +23,7 @@ class CelebADataset(Dataset):
 
         return image
 
-def load_data(provided_path="img_align_celeba/", batch_size=64, num_workers=8):
+def load_celeba(provided_path="img_align_celeba/", batch_size=64, num_workers=8):
     transform = transforms.Compose([
         transforms.CenterCrop(178),
         transforms.Resize(128),
