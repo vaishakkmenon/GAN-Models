@@ -24,12 +24,12 @@ batch_size = 64
 epochs = 50
 save_dir = "generated"
 os.makedirs(save_dir, exist_ok=True)
-print(f"[INFO] Save directory created: {save_dir}")  # <-- ADDED
+# print(f"[INFO] Save directory created: {save_dir}")  # <-- ADDED
 
 # Checkpoint directory
 checkpoint_dir = "checkpoints"
 os.makedirs(checkpoint_dir, exist_ok=True)
-print(f"[INFO] Checkpoint directory created: {checkpoint_dir}")  # <-- ADDED
+# print(f"[INFO] Checkpoint directory created: {checkpoint_dir}")  # <-- ADDED
 
 def load_mnist_full(provided_path="mnist/", batch_size=64, num_workers=8):
     # Compose the transforms to normalize MNIST images to [-1, 1] range
