@@ -35,16 +35,16 @@ def load_mnist_full(provided_path="mnist/", batch_size=64, num_workers=8):
         transforms.Normalize((0.5,), (0.5,))
     ])
 
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.abspath(os.path.join(current_dir, ".."))
-    data_path = os.path.join(project_root, "data", provided_path)
+    models_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    data_root = os.path.join(models_dir, "data")  # This creates 'data/' next to 'models/'
+    data_path = os.path.join(data_root, provided_path)
     
     os.makedirs(data_path, exist_ok=True)
 
     print(f"[INFO] Resolved dataset path: {data_path}")
     
-    if project_root not in sys.path:
-        sys.path.append(project_root)
+    if models_dir not in sys.path:
+        sys.path.append(models_dir)
 
     if not os.path.exists(data_path):
         raise FileNotFoundError(f"The resolved path '{data_path}' does not exist.")
