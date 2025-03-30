@@ -30,32 +30,35 @@ checkpoint_dir = "checkpoints"
 os.makedirs(checkpoint_dir, exist_ok=True)
 
 def load_mnist_full(provided_path="mnist/", batch_size=64, num_workers=8):
+    # Compose the transforms to normalize MNIST images to [-1, 1] range
     transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize((0.5,), (0.5,))
     ])
 
+    # Go two directories up to find the root project directory
     models_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    data_root = os.path.join(models_dir, "data")  # This creates 'data/' next to 'models/'
+    data_root = os.path.join(models_dir, "data")  # Ensures 'data/' is alongside 'models/'
     data_path = os.path.join(data_root, provided_path)
-    
-    os.makedirs(data_path, exist_ok=True)
+
+    os.makedirs(data_path, exist_ok=True)  # Ensure full directory path exists
 
     print(f"[INFO] Resolved dataset path: {data_path}")
-    
+
     if models_dir not in sys.path:
         sys.path.append(models_dir)
 
     if not os.path.exists(data_path):
         raise FileNotFoundError(f"The resolved path '{data_path}' does not exist.")
 
+    # Download both training and testing sets to combine
     train_dataset = datasets.MNIST(data_path, train=True, transform=transform, download=True)
     test_dataset = datasets.MNIST(data_path, train=False, transform=transform, download=True)
 
-    # Combine both into one dataset
+    # Combine both into one dataset for more diversity
     full_dataset = ConcatDataset([train_dataset, test_dataset])
     print("[INFO] Returning Full Dataset for DDP")
-    
+
     return full_dataset
 
 class Generator(nn.Module):
