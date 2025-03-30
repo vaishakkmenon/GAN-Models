@@ -11,6 +11,24 @@ from torchvision.utils import save_image
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, ConcatDataset
 
+# Distributed Data Parallel Imports
+import torch.distributed as dist
+import torch.multiprocessing as mp
+from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.utils.data.distributed import DistributedSampler
+
+# Config
+latent_dim = 100
+img_shape = 28 * 28
+batch_size = 64
+epochs = 50
+save_dir = "generated"
+os.makedirs(save_dir, exist_ok=True)
+
+# Checkpoint directory
+checkpoint_dir = "checkpoints"
+os.makedirs(checkpoint_dir, exist_ok=True)
+
 def load_mnist_full(provided_path="mnist/", batch_size=64, num_workers=8):
     transform = transforms.Compose([
         transforms.ToTensor(),
@@ -34,9 +52,9 @@ def load_mnist_full(provided_path="mnist/", batch_size=64, num_workers=8):
 
     # Combine both into one dataset
     full_dataset = ConcatDataset([train_dataset, test_dataset])
-    full_loader = DataLoader(full_dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
-
-    print("[INFO] Combined Train + Test Data Loaded")
+    print("[INFO] Returning Full Dataset for DDP")
+    
+    return full_dataset
 
 class Generator(nn.Module):
     # Latent_dim = Latent Dimension: Input noise vector
@@ -114,101 +132,126 @@ class Discriminator(nn.Module):
         out = self.sigmoid(x)
 
         return out
-    
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f"[INFO] Using device: {device}")
 
-latent_dim = 100
-img_shape = 28 * 28
-epochs = 50
-batch_size = 64
-save_dir = "generated"
+def train(rank, world_size):
+    # Initializes the distributed training process
+    dist.init_process_group("nccl", rank=rank, world_size=world_size)
+    torch.cuda.set_device(rank)
+    device = torch.device(f"cuda:{rank}")
 
-os.makedirs(save_dir, exist_ok=True)
+    # Load and distribute dataset across multiple GPUs
+    dataset = load_mnist_full()
+    sampler = DistributedSampler(dataset, num_replicas=world_size, rank=rank, shuffle=True)
+    train_loader = DataLoader(dataset, batch_size=batch_size, sampler=sampler, num_workers=4, pin_memory=True)
 
-train_data = load_mnist_full()
+    # Create and distribute the models to GPUs
+    G = Generator(latent_dim, img_shape).to(device)
+    D = Discriminator(img_shape).to(device)
 
-# Initialize Generator and Discriminator
-G = Generator(latent_dim, img_shape).to(device)
-D = Discriminator(img_shape).to(device)
+    G = DDP(G, device_ids=[rank])
+    D = DDP(D, device_ids=[rank])
 
-# Binary Cross Entropy Loss
-criterion = nn.BCELoss()
+    # Binary cross entropy loss function used for both Discriminator and Generator
+    criterion = nn.BCELoss()
 
-# Set up optimizers for both models
-# Learning Rate = 0.0002; Commonly used in GANs
-# Betas (0.5): Momentum term
-# Betas (0.999): Controls how quickly the optimizer adapts learning rates
-optimizer_G = optim.Adam(G.parameters(), lr=0.0002, betas=(0.5, 0.999))
-optimizer_D = optim.Adam(D.parameters(), lr=0.0002, betas=(0.5, 0.999))
+    # Adam optimizers for Generator and Discriminator
+    optimizer_G = optim.Adam(G.parameters(), lr=0.0002, betas=(0.5, 0.999))
+    optimizer_D = optim.Adam(D.parameters(), lr=0.0002, betas=(0.5, 0.999))
 
-for epoch in range(epochs):
-    for batch_idx, (imgs, _) in enumerate(train_data):
-        imgs = imgs.view(-1, img_shape).to(device)
-        batch_size = imgs.size(0)
-        
-        # Real and fake labels
-        valid = torch.ones(batch_size, 1, device=device)
-        fake = torch.zeros(batch_size, 1, device=device)
-        
+    best_g_loss = float('inf')  # Tracks the lowest Generator loss to save best model
+
+    # Begin training over specified number of epochs
+    for epoch in range(epochs):
+        sampler.set_epoch(epoch)  # Ensures shuffling across epochs for DistributedSampler
+
+        for batch_idx, (imgs, _) in enumerate(train_loader):
+            imgs = imgs.view(-1, img_shape).to(device)        # Flatten and move images to correct device
+            batch_size_curr = imgs.size(0)
+
+            # Real and fake label vectors
+            valid = torch.ones(batch_size_curr, 1, device=device)
+            fake = torch.zeros(batch_size_curr, 1, device=device)
+
+            # ======================
+            #  Train Discriminator
+            # ======================
+
+            # Random noise creation for generator to use
+            z = torch.randn(batch_size_curr, latent_dim, device=device)
+
+            # Create fake images based on random noise
+            # detach(): Stops backpropagation for generator so gradients are not updated
+            fake_imgs = G(z).detach()
+
+            # Teach discriminator real images
+            real_loss = criterion(D(imgs), valid)
+
+            # Teach discriminator fake images
+            fake_loss = criterion(D(fake_imgs), fake)
+
+            # Combine losses into overall loss; Balances contribution of real and fake
+            d_loss = (real_loss + fake_loss) / 2
+
+            # Manually clear the gradients before the next backward pass
+            # Prevents mixing gradients from previous batches
+            optimizer_D.zero_grad()
+
+            # Compute gradients of d_loss
+            d_loss.backward()
+
+            # Applies the weight updates using the Adam optimizer
+            optimizer_D.step()
+
+            # ======================
+            #  Train Generator
+            # ======================
+
+            # Random noise creation for generator to use
+            z = torch.randn(batch_size_curr, latent_dim, device=device)
+
+            # Generate fake images
+            gen_imgs = G(z)
+
+            # Pass the generated images into the Discriminator, trying to fool Discriminator
+            g_loss = criterion(D(gen_imgs), valid)
+
+            # Clears out any old gradients stored from the previous update
+            optimizer_G.zero_grad()
+
+            # Computes gradients of g_loss
+            g_loss.backward()
+
+            # Applies the gradient updates to the Generator using the Adam optimizer
+            optimizer_G.step()
+
+            # Print training progress for monitoring
+            if batch_idx % 100 == 0 and rank == 0:
+                print(f"[Epoch {epoch}/{epochs}] [Batch {batch_idx}/{len(train_loader)}] "
+                    f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss.item():.4f}]")
+
         # ======================
-        #  Train Discriminator
+        #  Save Output & Checkpoints
         # ======================
-        # Random noise creation for generator to use
-        z = torch.randn(batch_size, latent_dim, device=device)
-        
-        # Create fake images based on random noise
-        # detach(): Stops backpropagation for generator so gradients are not updated
-        fake_imgs = G(z).detach()
+        if rank == 0:
+            with torch.no_grad():
+                z = torch.randn(25, latent_dim, device=device)
+                samples = G.module(z).view(-1, 1, 28, 28)
+                save_image(samples, f"{save_dir}/epoch_{epoch}.png", nrow=5, normalize=True)
 
-        # Teach discriminator real images
-        real_loss = criterion(D(imgs), valid)
-        
-        # Teach discriminator fake images
-        fake_loss = criterion(D(fake_imgs), fake)
-        
-        # Combine losses into overall loss; Balances contribtion of real and fake
-        d_loss = (real_loss + fake_loss) / 2
+            # Save checkpoint for every epoch
+            torch.save(G.module.state_dict(), os.path.join(checkpoint_dir, f"generator_epoch_{epoch}.pth"))
+            torch.save(D.module.state_dict(), os.path.join(checkpoint_dir, f"discriminator_epoch_{epoch}.pth"))
 
-        # Manually clear the gradients before the next backward pass
-        # Prevents mixing gradients from previous batches
-        optimizer_D.zero_grad()
-        
-        # Compute gradients of d_loss
-        d_loss.backward()
-        
-        # Applies the weight updates using the Adam optimizer
-        optimizer_D.step()
-        
-        # ======================
-        #  Train Generator
-        # ======================
-        
-        # Random noise creation for generator to use
-        z = torch.randn(batch_size, latent_dim, device=device)
-        
-        # Generate fake images
-        gen_imgs = G(z)
+            # Save best Generator model based on g_loss
+            if g_loss.item() < best_g_loss:
+                best_g_loss = g_loss.item()
+                torch.save(G.module.state_dict(), os.path.join(checkpoint_dir, "best_generator.pth"))
+                torch.save(D.module.state_dict(), os.path.join(checkpoint_dir, "best_discriminator.pth"))
 
-        # Pass the generated images into the Discriminator, trying to fool Discriminator
-        g_loss = criterion(D(gen_imgs), valid)
+    # Clean up the process group
+    dist.destroy_process_group()
 
-        # Clears out any old gradients stored from the previous update
-        optimizer_G.zero_grad()
-        
-        # Computes gradients of g_loss
-        g_loss.backward()
-        
-        # Applies the gradient updates to the Generator using the Adam optimizer
-        optimizer_G.step()
-
-        # Print progress
-        if batch_idx % 100 == 0:
-            print(f"[Epoch {epoch}/{epochs}] [Batch {batch_idx}/{len(train_data)}] "
-                f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss.item():.4f}]")
-
-    # Save sample images
-    with torch.no_grad():
-        z = torch.randn(25, latent_dim, device=device)
-        samples = G(z).view(-1, 1, 28, 28)
-        save_image(samples, f"{save_dir}/epoch_{epoch}.png", nrow=5, normalize=True)
+# Launch distributed training using multiple processes (one per GPU)
+if __name__ == "__main__":
+    world_size = 2  # Number of GPUs to use
+    mp.spawn(train, args=(world_size,), nprocs=world_size, join=True)
