@@ -37,7 +37,7 @@ def load_mnist_full(provided_path="mnist/", batch_size=64, num_workers=8):
     ])
 
     # Go two directories up to find the root project directory
-    models_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    models_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
     data_root = os.path.join(models_dir, "data")  # Ensures 'data/' is alongside 'models/'
     data_path = os.path.join(data_root, provided_path)
 
