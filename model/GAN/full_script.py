@@ -98,7 +98,7 @@ class Generator(nn.Module):
         # Increase learned features
         x = self.fc2(x)
         # Normalize output thus far; Training stabilization, better gradient flow, normalized input
-        x = self.bn2(x)
+        x = self.bn(x)
         # Learn non-linear features from normalized data
         x = self.relu(x)
         
@@ -240,7 +240,7 @@ def train(rank, world_size):
             # Print training progress for monitoring
             if batch_idx % 100 == 0 and rank == 0:
                 print(f"[Epoch {epoch}/{epochs}] [Batch {batch_idx}/{len(train_loader)}] "
-                      f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss.item():.4f}]")
+                    f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss.item():.4f}]")
 
         # ======================
         #  Save Output & Checkpoints
