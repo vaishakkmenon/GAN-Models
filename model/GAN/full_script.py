@@ -143,6 +143,8 @@ def train(rank, world_size):
     dist.init_process_group("nccl", rank=rank, world_size=world_size)
     torch.cuda.set_device(rank)
     device = torch.device(f"cuda:{rank}")
+    
+    print(device)
 
     # Load and distribute dataset across multiple GPUs
     dataset = load_mnist_full()
