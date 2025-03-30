@@ -24,10 +24,12 @@ batch_size = 64
 epochs = 50
 save_dir = "generated"
 os.makedirs(save_dir, exist_ok=True)
+print(f"[INFO] Save directory created: {save_dir}")  # <-- ADDED
 
 # Checkpoint directory
 checkpoint_dir = "checkpoints"
 os.makedirs(checkpoint_dir, exist_ok=True)
+print(f"[INFO] Checkpoint directory created: {checkpoint_dir}")  # <-- ADDED
 
 def load_mnist_full(provided_path="mnist/", batch_size=64, num_workers=8):
     # Compose the transforms to normalize MNIST images to [-1, 1] range
@@ -43,7 +45,7 @@ def load_mnist_full(provided_path="mnist/", batch_size=64, num_workers=8):
 
     os.makedirs(data_path, exist_ok=True)  # Ensure full directory path exists
 
-    print(f"[INFO] Resolved dataset path: {data_path}")
+    print(f"[INFO] Resolved dataset path: {data_path}")  # <-- ADDED
 
     if models_dir not in sys.path:
         sys.path.append(models_dir)
@@ -57,7 +59,7 @@ def load_mnist_full(provided_path="mnist/", batch_size=64, num_workers=8):
 
     # Combine both into one dataset for more diversity
     full_dataset = ConcatDataset([train_dataset, test_dataset])
-    print("[INFO] Returning Full Dataset for DDP")
+    print("[INFO] Returning Full Dataset for DDP")  # <-- ADDED
 
     return full_dataset
 
@@ -144,12 +146,14 @@ def train(rank, world_size):
     torch.cuda.set_device(rank)
     device = torch.device(f"cuda:{rank}")
     
+    print(f"[INFO] Initialized process group and set device for rank {rank}")  # <-- ADDED
     print(device)
 
     # Load and distribute dataset across multiple GPUs
     dataset = load_mnist_full()
     sampler = DistributedSampler(dataset, num_replicas=world_size, rank=rank, shuffle=True)
     train_loader = DataLoader(dataset, batch_size=batch_size, sampler=sampler, num_workers=4, pin_memory=True)
+    print(f"[INFO] Dataset loaded and DataLoader created on rank {rank}")  # <-- ADDED
 
     # Create and distribute the models to GPUs
     G = Generator(latent_dim, img_shape).to(device)
@@ -157,6 +161,7 @@ def train(rank, world_size):
 
     G = DDP(G, device_ids=[rank])
     D = DDP(D, device_ids=[rank])
+    print(f"[INFO] Models moved to device and wrapped in DDP on rank {rank}")  # <-- ADDED
 
     # Binary cross entropy loss function used for both Discriminator and Generator
     criterion = nn.BCELoss()
@@ -170,6 +175,7 @@ def train(rank, world_size):
     # Begin training over specified number of epochs
     for epoch in range(epochs):
         sampler.set_epoch(epoch)  # Ensures shuffling across epochs for DistributedSampler
+        print(f"[INFO] Starting epoch {epoch} on rank {rank}")  # <-- ADDED
 
         for batch_idx, (imgs, _) in enumerate(train_loader):
             imgs = imgs.view(-1, img_shape).to(device)        # Flatten and move images to correct device
@@ -234,12 +240,13 @@ def train(rank, world_size):
             # Print training progress for monitoring
             if batch_idx % 100 == 0 and rank == 0:
                 print(f"[Epoch {epoch}/{epochs}] [Batch {batch_idx}/{len(train_loader)}] "
-                    f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss.item():.4f}]")
+                      f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss.item():.4f}]")
 
         # ======================
         #  Save Output & Checkpoints
         # ======================
         if rank == 0:
+            print(f"[INFO] Saving checkpoint and samples for epoch {epoch}")  # <-- ADDED
             with torch.no_grad():
                 z = torch.randn(25, latent_dim, device=device)
                 samples = G.module(z).view(-1, 1, 28, 28)
@@ -254,11 +261,15 @@ def train(rank, world_size):
                 best_g_loss = g_loss.item()
                 torch.save(G.module.state_dict(), os.path.join(checkpoint_dir, "best_generator.pth"))
                 torch.save(D.module.state_dict(), os.path.join(checkpoint_dir, "best_discriminator.pth"))
+                print(f"[INFO] New best model saved with G loss: {best_g_loss:.4f}")  # <-- ADDED
 
     # Clean up the process group
+    print(f"[INFO] Finished training on rank {rank}, cleaning up...")  # <-- ADDED
     dist.destroy_process_group()
 
 # Launch distributed training using multiple processes (one per GPU)
 if __name__ == "__main__":
+    print("[INFO] Launching DDP training...")  # <-- ADDED
     world_size = 2  # Number of GPUs to use
     mp.spawn(train, args=(world_size,), nprocs=world_size, join=True)
+    print("[INFO] Training complete.")  # <-- ADDED
