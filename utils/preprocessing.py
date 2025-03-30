@@ -104,3 +104,5 @@ def load_mnist_full(provided_path="mnist/", batch_size=64, num_workers=8):
     full_loader = DataLoader(full_dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
 
     print("[INFO] Combined Train + Test Data Loaded")
+    
+    return full_loader
