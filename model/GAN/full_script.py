@@ -38,6 +38,8 @@ def load_mnist_full(provided_path="mnist/", batch_size=64, num_workers=8):
     current_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.abspath(os.path.join(current_dir, ".."))
     data_path = os.path.join(project_root, "data", provided_path)
+    
+    os.makedirs(data_path, exist_ok=True)
 
     print(f"[INFO] Resolved dataset path: {data_path}")
     
