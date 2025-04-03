@@ -18,7 +18,7 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data.distributed import DistributedSampler
 
 # AMP (Automatic Mixed Precision) imports for faster training on RTX GPUs
-from torch.cuda.amp import autocast, GradScaler
+from torch.amp import autocast, GradScaler
 
 # Config
 latent_dim = 100
@@ -184,8 +184,8 @@ def train(rank, world_size):
     optimizer_D = optim.Adam(D.parameters(), lr=0.0002, betas=(0.5, 0.999))
 
     # AMP scalers for mixed precision training on RTX GPUs
-    scaler_G = GradScaler()  
-    scaler_D = GradScaler()  
+    scaler_G = GradScaler(device_type='cuda')
+    scaler_D = GradScaler(device_type='cuda')  
 
     best_g_loss = float('inf')  # Tracks the lowest Generator loss to save best model
 
@@ -210,7 +210,7 @@ def train(rank, world_size):
             z = torch.randn(batch_size_curr, latent_dim, device=device)
 
             # Use AMP for forward pass
-            with autocast():  
+            with autocast(device_type='cuda'):  
                 fake_imgs = G(z).detach()
                 real_loss = criterion(D(imgs), valid)
                 fake_loss = criterion(D(fake_imgs), fake)
