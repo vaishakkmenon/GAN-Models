@@ -1,40 +1,38 @@
 #!/bin/bash
 
-# Script to set up a Python virtual environment for GAN training with DDP & AMP on RTX 5090s
+# Project root and script paths
+PROJECT_ROOT="/workspace/GAN-model"
+SCRIPT_PATH="$PROJECT_ROOT/model/GAN/full_script.py"
+VENV_DIR="$PROJECT_ROOT/gan_env"
+PYTHON_VERSION=3.10
 
-# 1. Create and activate virtual environment
-echo "[INFO] Creating a virtual environment..."
-python3 -m venv gan_env
+# Create virtual environment if it doesn't exist
+if [ ! -d "$VENV_DIR" ]; then
+    echo "[INFO] Creating virtual environment at $VENV_DIR..."
+    python$PYTHON_VERSION -m venv $VENV_DIR
+fi
 
-echo "[INFO] Activating the virtual environment..."
-source gan_env/bin/activate  # Use 'source gan_env/Scripts/activate' on Windows
+# Activate the virtual environment
+echo "[INFO] Activating virtual environment..."
+source $VENV_DIR/bin/activate
 
-# 2. Install necessary Python dependencies
-echo "[INFO] Installing PyTorch and dependencies..."
+# Upgrade pip
+echo "[INFO] Upgrading pip..."
 pip install --upgrade pip
-pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
-pip install numpy
 
-# Optional: Install NCCL if needed
-echo "[INFO] Installing NCCL..."
-sudo apt-get install libnccl-dev
+# Install required dependencies (CUDA 11.8 version of PyTorch for 4090s)
+echo "[INFO] Installing PyTorch (CUDA 11.8) and dependencies..."
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
-# 3. Check if CUDA is available and PyTorch works
-echo "[INFO] Verifying CUDA availability in PyTorch..."
-python -c "import torch; print('CUDA Available:', torch.cuda.is_available())"
+# Install other useful packages
+pip install numpy matplotlib tqdm
 
-# 4. Set up project directories
-echo "[INFO] Creating required directories..."
-mkdir -p checkpoints generated
+# Export environment variables for DDP
+export MASTER_ADDR=localhost
+export MASTER_PORT=12355
 
-# 5. Verify GPUs are detected
-echo "[INFO] Verifying GPUs are detected by CUDA..."
-python -c "import torch; print('Number of GPUs available:', torch.cuda.device_count())"
+# Launch training
+echo "[INFO] Running full_script.py with Distributed Data Parallel on 4 GPUs..."
+python "$SCRIPT_PATH"
 
-# 6. Additional PyTorch checks (optional)
-# python -c "import torch; print(torch.cuda.get_device_name(0))"
-
-# 7. Instructions to the user
-echo "[INFO] Setup is complete!"
-echo "[INFO] Virtual environment 'gan_env' is activated. To activate it in the future, use: source gan_env/bin/activate"
-echo "[INFO] Now you can run your script with: python full_script.py"
+echo "[INFO] Training completed."
