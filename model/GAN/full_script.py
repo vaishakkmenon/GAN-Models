@@ -228,7 +228,7 @@ def train(rank, world_size):
 
             z = torch.randn(batch_size_curr, latent_dim, device=device)
 
-            with autocast():  
+            with autocast(device_type='cuda'):
                 gen_imgs = G(z)
                 g_loss = criterion(D(gen_imgs), valid)
 
