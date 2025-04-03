@@ -17,6 +17,9 @@ import torch.multiprocessing as mp
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data.distributed import DistributedSampler
 
+# AMP (Automatic Mixed Precision) imports for faster training on RTX GPUs
+from torch.cuda.amp import autocast, GradScaler
+
 # Config
 latent_dim = 100
 img_shape = 28 * 28
@@ -24,12 +27,10 @@ batch_size = 64
 epochs = 50
 save_dir = "generated"
 os.makedirs(save_dir, exist_ok=True)
-# print(f"[INFO] Save directory created: {save_dir}")  # <-- ADDED
 
 # Checkpoint directory
 checkpoint_dir = "checkpoints"
 os.makedirs(checkpoint_dir, exist_ok=True)
-# print(f"[INFO] Checkpoint directory created: {checkpoint_dir}")  # <-- ADDED
 
 def load_mnist_full(provided_path="mnist/", batch_size=64, num_workers=8):
     # Compose the transforms to normalize MNIST images to [-1, 1] range
@@ -45,7 +46,7 @@ def load_mnist_full(provided_path="mnist/", batch_size=64, num_workers=8):
 
     os.makedirs(data_path, exist_ok=True)  # Ensure full directory path exists
 
-    print(f"[INFO] Resolved dataset path: {data_path}")  # <-- ADDED
+    print(f"[INFO] Resolved dataset path: {data_path}")  
 
     if models_dir not in sys.path:
         sys.path.append(models_dir)
@@ -59,7 +60,7 @@ def load_mnist_full(provided_path="mnist/", batch_size=64, num_workers=8):
 
     # Combine both into one dataset for more diversity
     full_dataset = ConcatDataset([train_dataset, test_dataset])
-    print("[INFO] Returning Full Dataset for DDP")  # <-- ADDED
+    print("[INFO] Returning Full Dataset for DDP")  
 
     return full_dataset
 
@@ -68,66 +69,66 @@ class Generator(nn.Module):
     # Img_shape = shape of image: 28x28
     def __init__(self, latent_dim, img_shape):
         super(Generator, self).__init__()
-        
+
         # First fully connected layer to convert from 100 to 128
         # Lifts noise vector to feature space representing data
         self.fc1 = nn.Linear(latent_dim, 128)
-        
+
         # Second fully connected layer to convert from 128 to 256
         # Increases model capacity to learn complex features
         self.fc2 = nn.Linear(128, 256)
-        
+
         # Normalizes the output of a layer so the next one learns better
         self.bn = nn.BatchNorm1d(256)
-        
+
         # Final fully connected layer to convert from 256 to 768 (28 * 28)
         self.fc3 = nn.Linear(256, img_shape)
-        
+
         # Keeps values positive and allows for complex patterns to be learned
         self.relu = nn.ReLU(inplace=True)
-        
+
         # Scales all output values to be between -1 and 1
         self.tanh = nn.Tanh()
-        
+
     def forward(self, z):
         # Pass noise into linear layer for learned features
         x = self.fc1(z)
         # Introduce non-linearity
         x = self.relu(x)
-        
+
         # Increase learned features
         x = self.fc2(x)
         # Normalize output thus far; Training stabilization, better gradient flow, normalized input
         x = self.bn(x)
         # Learn non-linear features from normalized data
         x = self.relu(x)
-        
+
         # Final output layer to turn features into real-valued pixel data
         x = self.fc3(x)
         # Squash all output values to be between -1 and 1
         out = self.tanh(x)
-        
+
         return out
-    
+
 class Discriminator(nn.Module):
     def __init__(self, img_shape):
         super(Discriminator, self).__init__()
-        
+
         # First fully connected layer: takes 784 pixels -> 256 features
         self.fc1 = nn.Linear(img_shape, 256)
         # Second fully connected layer: takes 256 features -> 128 features
         self.fc2 = nn.Linear(256, 128)
         # Third fully connected layer: takes 128 features to 1 (real or fake)
         self.fc3 = nn.Linear(128, 1)
-        
+
         # Nonlinear activation that avoids dead neurons.
         self.leaky_relu = nn.LeakyReLU(0.2, inplace=True)
-        
+
         # Squashes output to [0, 1] to represent “realness"
         self.sigmoid = nn.Sigmoid()
-        
+
     def forward(self, x):
-        # Pass the image through each layer, use leakyReLU for non-linear activation, 
+        # Pass the image through each layer, use leakyReLU for non-linear activation,
         # and sigmoid for final output value
         x = self.fc1(x)
         x = self.leaky_relu(x)
@@ -145,15 +146,15 @@ def train(rank, world_size):
     dist.init_process_group("nccl", rank=rank, world_size=world_size)
     torch.cuda.set_device(rank)
     device = torch.device(f"cuda:{rank}")
-    
-    print(f"[INFO] Initialized process group and set device for rank {rank}")  # <-- ADDED
+
+    print(f"[INFO] Initialized process group and set device for rank {rank}")  
     print(device)
 
     # Load and distribute dataset across multiple GPUs
     dataset = load_mnist_full()
     sampler = DistributedSampler(dataset, num_replicas=world_size, rank=rank, shuffle=True)
     train_loader = DataLoader(dataset, batch_size=batch_size, sampler=sampler, num_workers=4, pin_memory=True)
-    print(f"[INFO] Dataset loaded and DataLoader created on rank {rank}")  # <-- ADDED
+    print(f"[INFO] Dataset loaded and DataLoader created on rank {rank}")  
 
     # Create and distribute the models to GPUs
     G = Generator(latent_dim, img_shape).to(device)
@@ -161,7 +162,7 @@ def train(rank, world_size):
 
     G = DDP(G, device_ids=[rank])
     D = DDP(D, device_ids=[rank])
-    print(f"[INFO] Models moved to device and wrapped in DDP on rank {rank}")  # <-- ADDED
+    print(f"[INFO] Models moved to device and wrapped in DDP on rank {rank}")  
 
     # Binary cross entropy loss function used for both Discriminator and Generator
     criterion = nn.BCELoss()
@@ -170,12 +171,16 @@ def train(rank, world_size):
     optimizer_G = optim.Adam(G.parameters(), lr=0.0002, betas=(0.5, 0.999))
     optimizer_D = optim.Adam(D.parameters(), lr=0.0002, betas=(0.5, 0.999))
 
+    # AMP scalers for mixed precision training on RTX GPUs
+    scaler_G = GradScaler()  
+    scaler_D = GradScaler()  
+
     best_g_loss = float('inf')  # Tracks the lowest Generator loss to save best model
 
     # Begin training over specified number of epochs
     for epoch in range(epochs):
         sampler.set_epoch(epoch)  # Ensures shuffling across epochs for DistributedSampler
-        print(f"[INFO] Starting epoch {epoch} on rank {rank}")  # <-- ADDED
+        print(f"[INFO] Starting epoch {epoch} on rank {rank}")  
 
         for batch_idx, (imgs, _) in enumerate(train_loader):
             imgs = imgs.view(-1, img_shape).to(device)        # Flatten and move images to correct device
@@ -192,50 +197,33 @@ def train(rank, world_size):
             # Random noise creation for generator to use
             z = torch.randn(batch_size_curr, latent_dim, device=device)
 
-            # Create fake images based on random noise
-            # detach(): Stops backpropagation for generator so gradients are not updated
-            fake_imgs = G(z).detach()
+            # Use AMP for forward pass
+            with autocast():  
+                fake_imgs = G(z).detach()
+                real_loss = criterion(D(imgs), valid)
+                fake_loss = criterion(D(fake_imgs), fake)
+                d_loss = (real_loss + fake_loss) / 2
 
-            # Teach discriminator real images
-            real_loss = criterion(D(imgs), valid)
-
-            # Teach discriminator fake images
-            fake_loss = criterion(D(fake_imgs), fake)
-
-            # Combine losses into overall loss; Balances contribution of real and fake
-            d_loss = (real_loss + fake_loss) / 2
-
-            # Manually clear the gradients before the next backward pass
-            # Prevents mixing gradients from previous batches
+            # Optimize with AMP scaler
             optimizer_D.zero_grad()
-
-            # Compute gradients of d_loss
-            d_loss.backward()
-
-            # Applies the weight updates using the Adam optimizer
-            optimizer_D.step()
+            scaler_D.scale(d_loss).backward()  
+            scaler_D.step(optimizer_D)         
+            scaler_D.update()                  
 
             # ======================
             #  Train Generator
             # ======================
 
-            # Random noise creation for generator to use
             z = torch.randn(batch_size_curr, latent_dim, device=device)
 
-            # Generate fake images
-            gen_imgs = G(z)
+            with autocast():  
+                gen_imgs = G(z)
+                g_loss = criterion(D(gen_imgs), valid)
 
-            # Pass the generated images into the Discriminator, trying to fool Discriminator
-            g_loss = criterion(D(gen_imgs), valid)
-
-            # Clears out any old gradients stored from the previous update
             optimizer_G.zero_grad()
-
-            # Computes gradients of g_loss
-            g_loss.backward()
-
-            # Applies the gradient updates to the Generator using the Adam optimizer
-            optimizer_G.step()
+            scaler_G.scale(g_loss).backward()  
+            scaler_G.step(optimizer_G)         
+            scaler_G.update()                  
 
             # Print training progress for monitoring
             if batch_idx % 100 == 0 and rank == 0:
@@ -246,13 +234,14 @@ def train(rank, world_size):
         #  Save Output & Checkpoints
         # ======================
         if rank == 0:
-            print(f"[INFO] Saving checkpoint and samples for epoch {epoch}")
-            G.eval()
+            print(f"[INFO] Saving checkpoint and samples for epoch {epoch}")  
+            G.eval()  # switch generator to eval mode for consistent inference
             with torch.no_grad():
                 z = torch.randn(25, latent_dim, device=device)
                 samples = G.module(z).view(-1, 1, 28, 28)
-                save_image(samples, f"{save_dir}/epoch_{epoch}.png", nrow=5, normalize=True)
-            G.train()
+                save_image(samples, f"{save_dir}/epoch_{epoch}.png", nrow=5, normalize=True)  # save sample images for visual inspection
+            G.train()  # switch back to training mode after saving samples
+
             # Save checkpoint for every epoch
             torch.save(G.module.state_dict(), os.path.join(checkpoint_dir, f"generator_epoch_{epoch}.pth"))
             torch.save(D.module.state_dict(), os.path.join(checkpoint_dir, f"discriminator_epoch_{epoch}.pth"))
@@ -262,15 +251,15 @@ def train(rank, world_size):
                 best_g_loss = g_loss.item()
                 torch.save(G.module.state_dict(), os.path.join(checkpoint_dir, "best_generator.pth"))
                 torch.save(D.module.state_dict(), os.path.join(checkpoint_dir, "best_discriminator.pth"))
-                print(f"[INFO] New best model saved with G loss: {best_g_loss:.4f}")  # <-- ADDED
+                print(f"[INFO] New best model saved with G loss: {best_g_loss:.4f}")  
 
     # Clean up the process group
-    print(f"[INFO] Finished training on rank {rank}, cleaning up...")  # <-- ADDED
+    print(f"[INFO] Finished training on rank {rank}, cleaning up...")  
     dist.destroy_process_group()
 
 # Launch distributed training using multiple processes (one per GPU)
 if __name__ == "__main__":
-    print("[INFO] Launching DDP training...")  # <-- ADDED
-    world_size = 2  # Number of GPUs to use
+    print("[INFO] Launching Training")  
+    world_size = 4  # <-- MODIFIED to use 4 GPUs
     mp.spawn(train, args=(world_size,), nprocs=world_size, join=True)
-    print("[INFO] Training complete.")  # <-- ADDED
+    print("[INFO] Training complete.")  
