@@ -1,4 +1,379 @@
-Traceback (most recent call last):
-  File "/workspace/GAN-Models/model/GAN/full_script.py", line 6, in <module>
-    import torch
-ModuleNotFoundError: No module named 'torch'
+nohup: ignoring input
+[INFO] Launching Training
+cuda:0
+[INFO] Resolved dataset path: /workspace/GAN-Models/data/mnist/
+cuda:1
+[INFO] Resolved dataset path: /workspace/GAN-Models/data/mnist/
+cuda:2
+[INFO] Resolved dataset path: /workspace/GAN-Models/data/mnist/
+[INFO] Returning Full Dataset for DDP
+[INFO] Returning Full Dataset for DDP
+cuda:3
+[INFO] Resolved dataset path: /workspace/GAN-Models/data/mnist/
+[INFO] Returning Full Dataset for DDP
+[INFO] Returning Full Dataset for DDP
+[INFO] Starting epoch 0 on rank 0
+[INFO] Starting epoch 0 on rank 1
+[INFO] Starting epoch 0 on rank 2
+[INFO] Starting epoch 0 on rank 3
+[Epoch 0/100] [Batch 0/69] [D loss: 0.7071] [G loss: 0.6551]
+[INFO] Starting epoch 1 on rank 1
+[INFO] Starting epoch 1 on rank 3
+[Epoch 0/100] Avg D Loss: 0.5543 | Avg G Loss: 0.6038 | LR_G: 0.000200 | LR_D: 0.000200
+[INFO] Saving checkpoint and samples for epoch 0
+[INFO] Starting epoch 1 on rank 2
+[INFO] New best model saved with G loss: 0.6038
+[INFO] Starting epoch 1 on rank 0
+[Epoch 1/100] [Batch 0/69] [D loss: 0.6140] [G loss: 0.6077]
+[INFO] Starting epoch 2 on rank 1
+[INFO] Starting epoch 2 on rank 2
+[INFO] Starting epoch 2 on rank 3
+[Epoch 1/100] Avg D Loss: 0.6329 | Avg G Loss: 0.6519 | LR_G: 0.000200 | LR_D: 0.000200
+[INFO] Saving checkpoint and samples for epoch 1
+[INFO] Warm-up epoch 1 – skipping early stopping check.
+[INFO] Starting epoch 2 on rank 0
+[Epoch 2/100] [Batch 0/69] [D loss: 0.6449] [G loss: 0.7116]
+[INFO] Starting epoch 3 on rank 1
+[INFO] Starting epoch 3 on rank 2
+[INFO] Starting epoch 3 on rank 3
+[Epoch 2/100] Avg D Loss: 0.6463 | Avg G Loss: 0.7439 | LR_G: 0.000200 | LR_D: 0.000200
+[INFO] Saving checkpoint and samples for epoch 2
+[INFO] Warm-up epoch 2 – skipping early stopping check.
+[INFO] Starting epoch 3 on rank 0
+[Epoch 3/100] [Batch 0/69] [D loss: 0.6044] [G loss: 0.8476]
+[INFO] Starting epoch 4 on rank 1
+[INFO] Starting epoch 4 on rank 2
+[Epoch 3/100] Avg D Loss: 0.6252 | Avg G Loss: 0.8083 | LR_G: 0.000200 | LR_D: 0.000200
+[INFO] Saving checkpoint and samples for epoch 3
+[INFO] Warm-up epoch 3 – skipping early stopping check.
+[INFO] Starting epoch 4 on rank 0
+[INFO] Starting epoch 4 on rank 3
+[Epoch 4/100] [Batch 0/69] [D loss: 0.6764] [G loss: 0.8680]
+[INFO] Starting epoch 5 on rank 1
+[Epoch 4/100] Avg D Loss: 0.6207 | Avg G Loss: 0.8216 | LR_G: 0.000200 | LR_D: 0.000200
+[INFO] Saving checkpoint and samples for epoch 4
+[INFO] Warm-up epoch 4 – skipping early stopping check.
+[INFO] Starting epoch 5 on rank 0
+[INFO] Starting epoch 5 on rank 2
+[INFO] Starting epoch 5 on rank 3
+[Epoch 5/100] [Batch 0/69] [D loss: 0.5657] [G loss: 0.8927]
+[INFO] Starting epoch 6 on rank 2
+[INFO] Starting epoch 6 on rank 1
+[INFO] Starting epoch 6 on rank 3
+[Epoch 5/100] Avg D Loss: 0.6007 | Avg G Loss: 0.8866 | LR_G: 0.000200 | LR_D: 0.000200
+[INFO] Saving checkpoint and samples for epoch 5
+[INFO] Warm-up epoch 5 – skipping early stopping check.
+[INFO] Starting epoch 6 on rank 0
+[Epoch 6/100] [Batch 0/69] [D loss: 0.6260] [G loss: 0.9053]
+[INFO] Starting epoch 7 on rank 1
+[Epoch 6/100] Avg D Loss: 0.5859 | Avg G Loss: 0.9670 | LR_G: 0.000200 | LR_D: 0.000200
+[INFO] Saving checkpoint and samples for epoch 6
+[INFO] Warm-up epoch 6 – skipping early stopping check.
+[INFO] Starting epoch 7 on rank 0
+[INFO] Starting epoch 7 on rank 2
+[INFO] Starting epoch 7 on rank 3
+[Epoch 7/100] [Batch 0/69] [D loss: 0.5596] [G loss: 0.9034]
+[INFO] Starting epoch 8 on rank 1
+[Epoch 7/100] Avg D Loss: 0.5449 | Avg G Loss: 1.0532 | LR_G: 0.000200 | LR_D: 0.000200
+[INFO] Saving checkpoint and samples for epoch 7
+[INFO] Warm-up epoch 7 – skipping early stopping check.
+[INFO] Starting epoch 8 on rank 0
+[INFO] Starting epoch 8 on rank 2
+[INFO] Starting epoch 8 on rank 3
+[Epoch 8/100] [Batch 0/69] [D loss: 0.5608] [G loss: 1.0538]
+[INFO] Starting epoch 9 on rank 1
+[Epoch 8/100] Avg D Loss: 0.5275 | Avg G Loss: 1.1279 | LR_G: 0.000200 | LR_D: 0.000200
+[INFO] Saving checkpoint and samples for epoch 8
+[INFO] Starting epoch 9 on rank 3
+[INFO] Warm-up epoch 8 – skipping early stopping check.
+[INFO] Starting epoch 9 on rank 0
+[INFO] Starting epoch 9 on rank 2
+[Epoch 9/100] [Batch 0/69] [D loss: 0.4960] [G loss: 1.4217]
+[INFO] Starting epoch 10 on rank 1
+[Epoch 9/100] Avg D Loss: 0.5284 | Avg G Loss: 1.2321 | LR_G: 0.000100 | LR_D: 0.000100
+[INFO] Saving checkpoint and samples for epoch 9
+[INFO] Warm-up epoch 9 – skipping early stopping check.
+[INFO] Starting epoch 10 on rank 0
+[INFO] Starting epoch 10 on rank 3
+[INFO] Starting epoch 10 on rank 2
+[Epoch 10/100] [Batch 0/69] [D loss: 0.5132] [G loss: 1.0231]
+[INFO] Starting epoch 11 on rank 1
+[INFO] Starting epoch 11 on rank 3
+[Epoch 10/100] Avg D Loss: 0.4652 | Avg G Loss: 1.0917 | LR_G: 0.000100 | LR_D: 0.000100
+[INFO] Saving checkpoint and samples for epoch 10
+[INFO] Warm-up epoch 10 – skipping early stopping check.
+[INFO] Starting epoch 11 on rank 0
+[INFO] Starting epoch 11 on rank 2
+[Epoch 11/100] [Batch 0/69] [D loss: 0.4356] [G loss: 1.2048]
+[Epoch 11/100] Avg D Loss: 0.4346 | Avg G Loss: 1.1823 | LR_G: 0.000100 | LR_D: 0.000100
+[INFO] Saving checkpoint and samples for epoch 11
+[INFO] Starting epoch 12 on rank 1
+[INFO] Warm-up epoch 11 – skipping early stopping check.
+[INFO] Starting epoch 12 on rank 0
+[INFO] Starting epoch 12 on rank 3
+[INFO] Starting epoch 12 on rank 2
+[Epoch 12/100] [Batch 0/69] [D loss: 0.4129] [G loss: 1.3957]
+[INFO] Starting epoch 13 on rank 1
+[Epoch 12/100] Avg D Loss: 0.4541 | Avg G Loss: 1.1696 | LR_G: 0.000100 | LR_D: 0.000100
+[INFO] Saving checkpoint and samples for epoch 12
+[INFO] Warm-up epoch 12 – skipping early stopping check.
+[INFO] Starting epoch 13 on rank 0
+[INFO] Starting epoch 13 on rank 3
+[INFO] Starting epoch 13 on rank 2
+[Epoch 13/100] [Batch 0/69] [D loss: 0.5213] [G loss: 0.9221]
+[Epoch 13/100] Avg D Loss: 0.4857 | Avg G Loss: 1.1097 | LR_G: 0.000100 | LR_D: 0.000100
+[INFO] Saving checkpoint and samples for epoch 13
+[INFO] Warm-up epoch 13 – skipping early stopping check.
+[INFO] Starting epoch 14 on rank 0
+[INFO] Starting epoch 14 on rank 1
+[INFO] Starting epoch 14 on rank 3
+[INFO] Starting epoch 14 on rank 2
+[Epoch 14/100] [Batch 0/69] [D loss: 0.5068] [G loss: 1.0430]
+[INFO] Starting epoch 15 on rank 1
+[Epoch 14/100] Avg D Loss: 0.4275 | Avg G Loss: 1.2334 | LR_G: 0.000100 | LR_D: 0.000100
+[INFO] Saving checkpoint and samples for epoch 14
+[INFO] Warm-up epoch 14 – skipping early stopping check.
+[INFO] Starting epoch 15 on rank 0
+[INFO] Starting epoch 15 on rank 2
+[INFO] Starting epoch 15 on rank 3
+[Epoch 15/100] [Batch 0/69] [D loss: 0.3968] [G loss: 1.5215]
+[INFO] Starting epoch 16 on rank 1
+[Epoch 15/100] Avg D Loss: 0.3869 | Avg G Loss: 1.3279 | LR_G: 0.000100 | LR_D: 0.000100
+[INFO] Saving checkpoint and samples for epoch 15
+[INFO] Starting epoch 16 on rank 3
+[INFO] Warm-up epoch 15 – skipping early stopping check.
+[INFO] Starting epoch 16 on rank 0
+[INFO] Starting epoch 16 on rank 2
+[Epoch 16/100] [Batch 0/69] [D loss: 0.3849] [G loss: 1.9119]
+[INFO] Starting epoch 17 on rank 1
+[Epoch 16/100] Avg D Loss: 0.3627 | Avg G Loss: 1.4441 | LR_G: 0.000100 | LR_D: 0.000100
+[INFO] Saving checkpoint and samples for epoch 16
+[INFO] Warm-up epoch 16 – skipping early stopping check.
+[INFO] Starting epoch 17 on rank 0
+[INFO] Starting epoch 17 on rank 3
+[INFO] Starting epoch 17 on rank 2
+[Epoch 17/100] [Batch 0/69] [D loss: 0.3418] [G loss: 1.5259]
+[INFO] Starting epoch 18 on rank 1
+[INFO] Starting epoch 18 on rank 3
+[Epoch 17/100] Avg D Loss: 0.4177 | Avg G Loss: 1.4150 | LR_G: 0.000100 | LR_D: 0.000100
+[INFO] Saving checkpoint and samples for epoch 17
+[INFO] Warm-up epoch 17 – skipping early stopping check.
+[INFO] Starting epoch 18 on rank 0
+[INFO] Starting epoch 18 on rank 2
+[Epoch 18/100] [Batch 0/69] [D loss: 0.3744] [G loss: 1.5735]
+[INFO] Starting epoch 19 on rank 1
+[Epoch 18/100] Avg D Loss: 0.4016 | Avg G Loss: 1.3830 | LR_G: 0.000100 | LR_D: 0.000100
+[INFO] Saving checkpoint and samples for epoch 18
+[INFO] Starting epoch 19 on rank 3
+[INFO] Warm-up epoch 18 – skipping early stopping check.
+[INFO] Starting epoch 19 on rank 0
+[INFO] Starting epoch 19 on rank 2
+[Epoch 19/100] [Batch 0/69] [D loss: 0.4116] [G loss: 1.3802]
+[Epoch 19/100] Avg D Loss: 0.4021 | Avg G Loss: 1.4222 | LR_G: 0.000050 | LR_D: 0.000050
+[INFO] Saving checkpoint and samples for epoch 19
+[INFO] Warm-up epoch 19 – skipping early stopping check.
+[INFO] Starting epoch 20 on rank 0
+[INFO] Starting epoch 20 on rank 1
+[INFO] Starting epoch 20 on rank 2
+[INFO] Starting epoch 20 on rank 3
+[Epoch 20/100] [Batch 0/69] [D loss: 0.4873] [G loss: 1.1413]
+[INFO] Starting epoch 21 on rank 3
+[INFO] Starting epoch 21 on rank 1
+[INFO] Starting epoch 21 on rank 2
+[Epoch 20/100] Avg D Loss: 0.3703 | Avg G Loss: 1.2933 | LR_G: 0.000050 | LR_D: 0.000050
+[INFO] Saving checkpoint and samples for epoch 20
+[INFO] Warm-up epoch 20 – skipping early stopping check.
+[INFO] Starting epoch 21 on rank 0
+[Epoch 21/100] [Batch 0/69] [D loss: 0.3365] [G loss: 1.4334]
+[INFO] Starting epoch 22 on rank 3
+[INFO] Starting epoch 22 on rank 1
+[Epoch 21/100] Avg D Loss: 0.3232 | Avg G Loss: 1.4065 | LR_G: 0.000050 | LR_D: 0.000050
+[INFO] Saving checkpoint and samples for epoch 21
+[INFO] Warm-up epoch 21 – skipping early stopping check.
+[INFO] Starting epoch 22 on rank 0
+[INFO] Starting epoch 22 on rank 2
+[Epoch 22/100] [Batch 0/69] [D loss: 0.3113] [G loss: 1.4427]
+[INFO] Starting epoch 23 on rank 3
+[Epoch 22/100] Avg D Loss: 0.3332 | Avg G Loss: 1.3862 | LR_G: 0.000050 | LR_D: 0.000050
+[INFO] Saving checkpoint and samples for epoch 22
+[INFO] Warm-up epoch 22 – skipping early stopping check.
+[INFO] Starting epoch 23 on rank 0
+[INFO] Starting epoch 23 on rank 2
+[INFO] Starting epoch 23 on rank 1
+[Epoch 23/100] [Batch 0/69] [D loss: 0.3276] [G loss: 1.3936]
+[Epoch 23/100] Avg D Loss: 0.3043 | Avg G Loss: 1.4733 | LR_G: 0.000050 | LR_D: 0.000050
+[INFO] Saving checkpoint and samples for epoch 23
+[INFO] Warm-up epoch 23 – skipping early stopping check.
+[INFO] Starting epoch 24 on rank 0
+[INFO] Starting epoch 24 on rank 1
+[INFO] Starting epoch 24 on rank 2
+[INFO] Starting epoch 24 on rank 3
+[Epoch 24/100] [Batch 0/69] [D loss: 0.2995] [G loss: 1.4920]
+[INFO] Starting epoch 25 on rank 1
+[Epoch 24/100] Avg D Loss: 0.3182 | Avg G Loss: 1.4475 | LR_G: 0.000050 | LR_D: 0.000050
+[INFO] Saving checkpoint and samples for epoch 24
+[INFO] Warm-up epoch 24 – skipping early stopping check.
+[INFO] Starting epoch 25 on rank 0
+[INFO] Starting epoch 25 on rank 3
+[INFO] Starting epoch 25 on rank 2
+[Epoch 25/100] [Batch 0/69] [D loss: 0.3352] [G loss: 1.3845]
+[INFO] Starting epoch 26 on rank 3
+[INFO] Starting epoch 26 on rank 1
+[INFO] Starting epoch 26 on rank 2
+[Epoch 25/100] Avg D Loss: 0.3215 | Avg G Loss: 1.4222 | LR_G: 0.000050 | LR_D: 0.000050
+[INFO] Saving checkpoint and samples for epoch 25
+[INFO] No improvement. Early stopping counter: 1/20
+[INFO] Starting epoch 26 on rank 0
+[Epoch 26/100] [Batch 0/69] [D loss: 0.3102] [G loss: 1.4574]
+[Epoch 26/100] Avg D Loss: 0.2942 | Avg G Loss: 1.5004 | LR_G: 0.000050 | LR_D: 0.000050
+[INFO] Saving checkpoint and samples for epoch 26
+[INFO] No improvement. Early stopping counter: 2/20
+[INFO] Starting epoch 27 on rank 0
+[INFO] Starting epoch 27 on rank 3
+[INFO] Starting epoch 27 on rank 1
+[INFO] Starting epoch 27 on rank 2
+[Epoch 27/100] [Batch 0/69] [D loss: 0.2842] [G loss: 1.5845]
+[Epoch 27/100] Avg D Loss: 0.2704 | Avg G Loss: 1.5981 | LR_G: 0.000050 | LR_D: 0.000050
+[INFO] Saving checkpoint and samples for epoch 27
+[INFO] Starting epoch 28 on rank 2
+[INFO] No improvement. Early stopping counter: 3/20
+[INFO] Starting epoch 28 on rank 0
+[INFO] Starting epoch 28 on rank 1
+[INFO] Starting epoch 28 on rank 3
+[Epoch 28/100] [Batch 0/69] [D loss: 0.2713] [G loss: 1.5698]
+[INFO] Starting epoch 29 on rank 2
+[INFO] Starting epoch 29 on rank 3
+[INFO] Starting epoch 29 on rank 1
+[Epoch 28/100] Avg D Loss: 0.2791 | Avg G Loss: 1.5710 | LR_G: 0.000050 | LR_D: 0.000050
+[INFO] Saving checkpoint and samples for epoch 28
+[INFO] No improvement. Early stopping counter: 4/20
+[INFO] Starting epoch 29 on rank 0
+[Epoch 29/100] [Batch 0/69] [D loss: 0.2588] [G loss: 1.4465]
+[INFO] Starting epoch 30 on rank 2
+[Epoch 29/100] Avg D Loss: 0.2784 | Avg G Loss: 1.5823 | LR_G: 0.000025 | LR_D: 0.000025
+[INFO] Saving checkpoint and samples for epoch 29
+[INFO] No improvement. Early stopping counter: 5/20
+[INFO] Starting epoch 30 on rank 0
+[INFO] Starting epoch 30 on rank 3
+[INFO] Starting epoch 30 on rank 1
+[Epoch 30/100] [Batch 0/69] [D loss: 0.2782] [G loss: 1.5254]
+[INFO] Starting epoch 31 on rank 2
+[INFO] Starting epoch 31 on rank 3
+[INFO] Starting epoch 31 on rank 1
+[Epoch 30/100] Avg D Loss: 0.2724 | Avg G Loss: 1.5291 | LR_G: 0.000025 | LR_D: 0.000025
+[INFO] Saving checkpoint and samples for epoch 30
+[INFO] No improvement. Early stopping counter: 6/20
+[INFO] Starting epoch 31 on rank 0
+[Epoch 31/100] [Batch 0/69] [D loss: 0.2546] [G loss: 1.5637]
+[Epoch 31/100] Avg D Loss: 0.2437 | Avg G Loss: 1.6336 | LR_G: 0.000025 | LR_D: 0.000025
+[INFO] Saving checkpoint and samples for epoch 31
+[INFO] No improvement. Early stopping counter: 7/20
+[INFO] Starting epoch 32 on rank 0
+[INFO] Starting epoch 32 on rank 2
+[INFO] Starting epoch 32 on rank 1
+[INFO] Starting epoch 32 on rank 3
+[Epoch 32/100] [Batch 0/69] [D loss: 0.2433] [G loss: 1.6588]
+[INFO] Starting epoch 33 on rank 2
+[INFO] Starting epoch 33 on rank 3
+[INFO] Starting epoch 33 on rank 1
+[Epoch 32/100] Avg D Loss: 0.2455 | Avg G Loss: 1.6410 | LR_G: 0.000025 | LR_D: 0.000025
+[INFO] Saving checkpoint and samples for epoch 32
+[INFO] No improvement. Early stopping counter: 8/20
+[INFO] Starting epoch 33 on rank 0
+[Epoch 33/100] [Batch 0/69] [D loss: 0.2621] [G loss: 1.5834]
+[Epoch 33/100] Avg D Loss: 0.2542 | Avg G Loss: 1.6214 | LR_G: 0.000025 | LR_D: 0.000025
+[INFO] Saving checkpoint and samples for epoch 33
+[INFO] Starting epoch 34 on rank 2
+[INFO] Starting epoch 34 on rank 3
+[INFO] Starting epoch 34 on rank 1
+[INFO] No improvement. Early stopping counter: 9/20
+[INFO] Starting epoch 34 on rank 0
+[Epoch 34/100] [Batch 0/69] [D loss: 0.2647] [G loss: 1.6013]
+[Epoch 34/100] Avg D Loss: 0.2566 | Avg G Loss: 1.6102 | LR_G: 0.000025 | LR_D: 0.000025
+[INFO] Saving checkpoint and samples for epoch 34
+[INFO] No improvement. Early stopping counter: 10/20
+[INFO] Starting epoch 35 on rank 0
+[INFO] Starting epoch 35 on rank 2
+[INFO] Starting epoch 35 on rank 3
+[INFO] Starting epoch 35 on rank 1
+[Epoch 35/100] [Batch 0/69] [D loss: 0.2391] [G loss: 1.6603]
+[INFO] Starting epoch 36 on rank 1
+[INFO] Starting epoch 36 on rank 3
+[INFO] Starting epoch 36 on rank 2
+[Epoch 35/100] Avg D Loss: 0.2315 | Avg G Loss: 1.7042 | LR_G: 0.000025 | LR_D: 0.000025
+[INFO] Saving checkpoint and samples for epoch 35
+[INFO] No improvement. Early stopping counter: 11/20
+[INFO] Starting epoch 36 on rank 0
+[Epoch 36/100] [Batch 0/69] [D loss: 0.2405] [G loss: 1.6654]
+[INFO] Starting epoch 37 on rank 1
+[INFO] Starting epoch 37 on rank 2
+[INFO] Starting epoch 37 on rank 3
+[Epoch 36/100] Avg D Loss: 0.2278 | Avg G Loss: 1.7341 | LR_G: 0.000025 | LR_D: 0.000025
+[INFO] Saving checkpoint and samples for epoch 36
+[INFO] No improvement. Early stopping counter: 12/20
+[INFO] Starting epoch 37 on rank 0
+[Epoch 37/100] [Batch 0/69] [D loss: 0.2214] [G loss: 1.7795]
+[INFO] Starting epoch 38 on rank 1
+[INFO] Starting epoch 38 on rank 3
+[Epoch 37/100] Avg D Loss: 0.2320 | Avg G Loss: 1.7314 | LR_G: 0.000025 | LR_D: 0.000025
+[INFO] Saving checkpoint and samples for epoch 37
+[INFO] Starting epoch 38 on rank 2
+[INFO] No improvement. Early stopping counter: 13/20
+[INFO] Starting epoch 38 on rank 0
+[Epoch 38/100] [Batch 0/69] [D loss: 0.2201] [G loss: 1.8494]
+[INFO] Starting epoch 39 on rank 3
+[INFO] Starting epoch 39 on rank 1
+[INFO] Starting epoch 39 on rank 2
+[Epoch 38/100] Avg D Loss: 0.2416 | Avg G Loss: 1.6847 | LR_G: 0.000025 | LR_D: 0.000025
+[INFO] Saving checkpoint and samples for epoch 38
+[INFO] No improvement. Early stopping counter: 14/20
+[INFO] Starting epoch 39 on rank 0
+[Epoch 39/100] [Batch 0/69] [D loss: 0.2419] [G loss: 1.6668]
+[INFO] Starting epoch 40 on rank 3
+[Epoch 39/100] Avg D Loss: 0.2423 | Avg G Loss: 1.6846 | LR_G: 0.000013 | LR_D: 0.000013
+[INFO] Saving checkpoint and samples for epoch 39
+[INFO] Starting epoch 40 on rank 1
+[INFO] No improvement. Early stopping counter: 15/20
+[INFO] Starting epoch 40 on rank 0
+[INFO] Starting epoch 40 on rank 2
+[Epoch 40/100] [Batch 0/69] [D loss: 0.2373] [G loss: 1.5944]
+[Epoch 40/100] Avg D Loss: 0.2341 | Avg G Loss: 1.6735 | LR_G: 0.000013 | LR_D: 0.000013
+[INFO] Saving checkpoint and samples for epoch 40
+[INFO] No improvement. Early stopping counter: 16/20
+[INFO] Starting epoch 41 on rank 0
+[INFO] Starting epoch 41 on rank 2
+[INFO] Starting epoch 41 on rank 1
+[INFO] Starting epoch 41 on rank 3
+[Epoch 41/100] [Batch 0/69] [D loss: 0.2319] [G loss: 1.6610]
+[INFO] Starting epoch 42 on rank 2
+[Epoch 41/100] Avg D Loss: 0.2293 | Avg G Loss: 1.6971 | LR_G: 0.000013 | LR_D: 0.000013
+[INFO] Saving checkpoint and samples for epoch 41
+[INFO] No improvement. Early stopping counter: 17/20
+[INFO] Starting epoch 42 on rank 0
+[INFO] Starting epoch 42 on rank 3
+[INFO] Starting epoch 42 on rank 1
+[Epoch 42/100] [Batch 0/69] [D loss: 0.2392] [G loss: 1.6623]
+[INFO] Starting epoch 43 on rank 2
+[Epoch 42/100] Avg D Loss: 0.2223 | Avg G Loss: 1.7432 | LR_G: 0.000013 | LR_D: 0.000013
+[INFO] Saving checkpoint and samples for epoch 42
+[INFO] No improvement. Early stopping counter: 18/20
+[INFO] Starting epoch 43 on rank 0
+[INFO] Starting epoch 43 on rank 3
+[INFO] Starting epoch 43 on rank 1
+[Epoch 43/100] [Batch 0/69] [D loss: 0.2069] [G loss: 1.7453]
+[INFO] Starting epoch 44 on rank 3
+[Epoch 43/100] Avg D Loss: 0.2102 | Avg G Loss: 1.7788 | LR_G: 0.000013 | LR_D: 0.000013
+[INFO] Saving checkpoint and samples for epoch 43
+[INFO] No improvement. Early stopping counter: 19/20
+[INFO] Starting epoch 44 on rank 0
+[INFO] Starting epoch 44 on rank 1
+[INFO] Starting epoch 44 on rank 2
+[Epoch 44/100] [Batch 0/69] [D loss: 0.2065] [G loss: 1.8080]
+[INFO] Starting epoch 45 on rank 1
+[INFO] Starting epoch 45 on rank 2
+[INFO] Starting epoch 45 on rank 3
+[Epoch 44/100] Avg D Loss: 0.2067 | Avg G Loss: 1.8063 | LR_G: 0.000013 | LR_D: 0.000013
+[INFO] Saving checkpoint and samples for epoch 44
+[INFO] No improvement. Early stopping counter: 20/20
+[INFO] Early stopping triggered at epoch 44
+[INFO] Finished training on rank 0, cleaning up...
