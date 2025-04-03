@@ -141,40 +141,40 @@ class Discriminator(nn.Module):
 
 def train(rank, world_size):
     # Initializes the distributed training process
-    try:
-        dist.init_process_group("nccl", rank=rank, world_size=world_size)
-        print(f"[INFO] Process group initialized for rank {rank}")
-    except Exception as e:
-        print(f"[ERROR] Failed to initialize process group for rank {rank}: {e}")
-        return
-    # dist.init_process_group("nccl", rank=rank, world_size=world_size)
+    # try:
+    #     dist.init_process_group("nccl", rank=rank, world_size=world_size)
+    #     print(f"[INFO] Process group initialized for rank {rank}")
+    # except Exception as e:
+    #     print(f"[ERROR] Failed to initialize process group for rank {rank}: {e}")
+    #     return
+    dist.init_process_group("nccl", rank=rank, world_size=world_size)
     torch.cuda.set_device(rank)
     device = torch.device(f"cuda:{rank}")
 
-    print(f"[INFO] Initialized process group and set device for rank {rank}")  
+    # print(f"[INFO] Initialized process group and set device for rank {rank}")  
     print(device)
 
     # Load and distribute dataset across multiple GPUs
     dataset = load_mnist_full()
     sampler = DistributedSampler(dataset, num_replicas=world_size, rank=rank, shuffle=True)
     train_loader = DataLoader(dataset, batch_size=batch_size, sampler=sampler, num_workers=4, pin_memory=True)
-    print(f"[INFO] Dataset loaded and DataLoader created on rank {rank}")  
+    # print(f"[INFO] Dataset loaded and DataLoader created on rank {rank}")  
 
-    print(f"[INFO] Moving models to device and wrapping with DDP on rank {rank}")
+    # print(f"[INFO] Moving models to device and wrapping with DDP on rank {rank}")
 
     # Debugging: Check before model initialization
-    print(f"[DEBUG] Initializing Generator and Discriminator models on rank {rank}")
+    # print(f"[DEBUG] Initializing Generator and Discriminator models on rank {rank}")
 
     # Initialize models
     G = Generator(latent_dim, img_shape).to(device)
     D = Discriminator(img_shape).to(device)
 
     # Debugging: Check after model initialization
-    print(f"[DEBUG] Models initialized on rank {rank}")
+    # print(f"[DEBUG] Models initialized on rank {rank}")
 
     G = DDP(G, device_ids=[rank])
     D = DDP(D, device_ids=[rank])
-    print(f"[INFO] Models moved to device and wrapped in DDP on rank {rank}")  
+    # print(f"[INFO] Models moved to device and wrapped in DDP on rank {rank}")  
 
     # Binary cross entropy loss function used for both Discriminator and Generator
     criterion = nn.BCEWithLogitsLoss()
