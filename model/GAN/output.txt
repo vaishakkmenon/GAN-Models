@@ -1,0 +1,45 @@
+[INFO] Launching Training
+/workspace/GAN-Models/gan_env/lib/python3.10/site-packages/torch/cuda/__init__.py:235: UserWarning: 
+NVIDIA GeForce RTX 5090 with CUDA capability sm_120 is not compatible with the current PyTorch installation.
+The current PyTorch install supports CUDA capabilities sm_50 sm_60 sm_70 sm_75 sm_80 sm_86 sm_90.
+If you want to use the NVIDIA GeForce RTX 5090 GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/
+
+  warnings.warn(
+/workspace/GAN-Models/gan_env/lib/python3.10/site-packages/torch/cuda/__init__.py:235: UserWarning: 
+NVIDIA GeForce RTX 5090 with CUDA capability sm_120 is not compatible with the current PyTorch installation.
+The current PyTorch install supports CUDA capabilities sm_50 sm_60 sm_70 sm_75 sm_80 sm_86 sm_90.
+If you want to use the NVIDIA GeForce RTX 5090 GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/
+
+  warnings.warn(
+/workspace/GAN-Models/gan_env/lib/python3.10/site-packages/torch/cuda/__init__.py:235: UserWarning: 
+NVIDIA GeForce RTX 5090 with CUDA capability sm_120 is not compatible with the current PyTorch installation.
+The current PyTorch install supports CUDA capabilities sm_50 sm_60 sm_70 sm_75 sm_80 sm_86 sm_90.
+If you want to use the NVIDIA GeForce RTX 5090 GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/
+
+  warnings.warn(
+/workspace/GAN-Models/gan_env/lib/python3.10/site-packages/torch/cuda/__init__.py:235: UserWarning: 
+NVIDIA GeForce RTX 5090 with CUDA capability sm_120 is not compatible with the current PyTorch installation.
+The current PyTorch install supports CUDA capabilities sm_50 sm_60 sm_70 sm_75 sm_80 sm_86 sm_90.
+If you want to use the NVIDIA GeForce RTX 5090 GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/
+
+  warnings.warn(
+[INFO] Initialized process group and set device for rank 0
+cuda:0
+[INFO] Resolved dataset path: /workspace/GAN-Models/data/mnist/
+[INFO] Returning Full Dataset for DDP
+[INFO] Dataset loaded and DataLoader created on rank 0
+[INFO] Initialized process group and set device for rank 3
+cuda:3
+[INFO] Resolved dataset path: /workspace/GAN-Models/data/mnist/
+[INFO] Initialized process group and set device for rank 2
+cuda:2
+[INFO] Resolved dataset path: /workspace/GAN-Models/data/mnist/
+[INFO] Initialized process group and set device for rank 1
+cuda:1
+[INFO] Resolved dataset path: /workspace/GAN-Models/data/mnist/
+[INFO] Returning Full Dataset for DDP
+[INFO] Dataset loaded and DataLoader created on rank 3
+[INFO] Returning Full Dataset for DDP
+[INFO] Dataset loaded and DataLoader created on rank 2
+[INFO] Returning Full Dataset for DDP
+[INFO] Dataset loaded and DataLoader created on rank 1
