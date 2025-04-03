@@ -35,7 +35,7 @@ class Generator(nn.Module):
         # Increase learned features
         x = self.fc2(x)
         # Normalize output thus far; Training stabilization, better gradient flow, normalized input
-        x = self.bn2(x)
+        x = self.bn(x)
         # Learn non-linear features from normalized data
         x = self.relu(x)
         

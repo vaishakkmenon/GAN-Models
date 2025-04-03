@@ -246,12 +246,13 @@ def train(rank, world_size):
         #  Save Output & Checkpoints
         # ======================
         if rank == 0:
-            print(f"[INFO] Saving checkpoint and samples for epoch {epoch}")  # <-- ADDED
+            print(f"[INFO] Saving checkpoint and samples for epoch {epoch}")
+            G.eval()
             with torch.no_grad():
                 z = torch.randn(25, latent_dim, device=device)
                 samples = G.module(z).view(-1, 1, 28, 28)
                 save_image(samples, f"{save_dir}/epoch_{epoch}.png", nrow=5, normalize=True)
-
+            G.train()
             # Save checkpoint for every epoch
             torch.save(G.module.state_dict(), os.path.join(checkpoint_dir, f"generator_epoch_{epoch}.pth"))
             torch.save(D.module.state_dict(), os.path.join(checkpoint_dir, f"discriminator_epoch_{epoch}.pth"))
