@@ -173,7 +173,9 @@ def train(rank, world_size):
     scaler_G = GradScaler('cuda')
     scaler_D = GradScaler('cuda')
 
-    best_g_loss = float('inf')  # Tracks the lowest Generator loss to save best model
+    best_g_loss = float('inf')
+    patience = 20
+    patience_counter = 0
 
     # Begin training over specified number of epochs
     for epoch in range(epochs):
@@ -261,12 +263,20 @@ def train(rank, world_size):
             torch.save(G.module.state_dict(), os.path.join(checkpoint_dir, f"generator_epoch_{epoch}.pth"))
             torch.save(D.module.state_dict(), os.path.join(checkpoint_dir, f"discriminator_epoch_{epoch}.pth"))
 
-            # Save best Generator model
+            # Save best Generator model or update early stopping counter
             if avg_g_loss < best_g_loss:
                 best_g_loss = avg_g_loss
+                patience_counter = 0
                 torch.save(G.module.state_dict(), os.path.join(checkpoint_dir, "best_generator.pth"))
                 torch.save(D.module.state_dict(), os.path.join(checkpoint_dir, "best_discriminator.pth"))
                 print(f"[INFO] New best model saved with G loss: {best_g_loss:.4f}")
+            else:
+                patience_counter += 1
+                print(f"[INFO] No improvement. Early stopping counter: {patience_counter}/{patience}")
+
+                if patience_counter >= patience:
+                    print(f"[INFO] Early stopping triggered at epoch {epoch}")
+                    break
 
     # Clean up the process group
     print(f"[INFO] Finished training on rank {rank}, cleaning up...")
