@@ -329,9 +329,6 @@ def train(rank, world_size):
 
 # Launch distributed training using multiple processes (one per GPU)
 if __name__ == "__main__":
-    os.environ['MASTER_ADDR'] = 'localhost'
-    os.environ['MASTER_PORT'] = '12355'
-    
     print("[INFO] Launching Training")  
     world_size = 4  # <-- MODIFIED to use 4 GPUs
     mp.spawn(train, args=(world_size,), nprocs=world_size, join=True)
