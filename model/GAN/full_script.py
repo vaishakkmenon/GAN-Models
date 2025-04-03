@@ -10,6 +10,7 @@ import torch.optim as optim
 from torchvision.utils import save_image
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, ConcatDataset
+from torch.optim.lr_scheduler import StepLR
 
 # Distributed Data Parallel Imports
 import torch.distributed as dist
@@ -23,13 +24,13 @@ from torch.amp import autocast, GradScaler
 # Config
 latent_dim = 100
 img_shape = 28 * 28
-batch_size = 64
+batch_size = 256
 epochs = 50
-save_dir = "generated"
+save_dir = "generated-latest"
 os.makedirs(save_dir, exist_ok=True)
 
 # Checkpoint directory
-checkpoint_dir = "checkpoints"
+checkpoint_dir = "checkpoints-latest"
 os.makedirs(checkpoint_dir, exist_ok=True)
 
 def load_mnist_full(provided_path="mnist/", batch_size=64, num_workers=8):
@@ -141,40 +142,21 @@ class Discriminator(nn.Module):
 
 def train(rank, world_size):
     # Initializes the distributed training process
-    # try:
-    #     dist.init_process_group("nccl", rank=rank, world_size=world_size)
-    #     print(f"[INFO] Process group initialized for rank {rank}")
-    # except Exception as e:
-    #     print(f"[ERROR] Failed to initialize process group for rank {rank}: {e}")
-    #     return
     dist.init_process_group("nccl", rank=rank, world_size=world_size)
     torch.cuda.set_device(rank)
     device = torch.device(f"cuda:{rank}")
-
-    # print(f"[INFO] Initialized process group and set device for rank {rank}")  
     print(device)
 
     # Load and distribute dataset across multiple GPUs
     dataset = load_mnist_full()
     sampler = DistributedSampler(dataset, num_replicas=world_size, rank=rank, shuffle=True)
     train_loader = DataLoader(dataset, batch_size=batch_size, sampler=sampler, num_workers=4, pin_memory=True)
-    # print(f"[INFO] Dataset loaded and DataLoader created on rank {rank}")  
-
-    # print(f"[INFO] Moving models to device and wrapping with DDP on rank {rank}")
-
-    # Debugging: Check before model initialization
-    # print(f"[DEBUG] Initializing Generator and Discriminator models on rank {rank}")
 
     # Initialize models
     G = Generator(latent_dim, img_shape).to(device)
     D = Discriminator(img_shape).to(device)
-
-    # Debugging: Check after model initialization
-    # print(f"[DEBUG] Models initialized on rank {rank}")
-
     G = DDP(G, device_ids=[rank])
     D = DDP(D, device_ids=[rank])
-    # print(f"[INFO] Models moved to device and wrapped in DDP on rank {rank}")  
 
     # Binary cross entropy loss function used for both Discriminator and Generator
     criterion = nn.BCEWithLogitsLoss()
@@ -183,16 +165,23 @@ def train(rank, world_size):
     optimizer_G = optim.Adam(G.parameters(), lr=0.0002, betas=(0.5, 0.999))
     optimizer_D = optim.Adam(D.parameters(), lr=0.0002, betas=(0.5, 0.999))
 
+    # Learning Rate Scheduler for optimizers
+    scheduler_G = StepLR(optimizer_G, step_size=10, gamma=0.5)
+    scheduler_D = StepLR(optimizer_D, step_size=10, gamma=0.5)
+
     # AMP scalers for mixed precision training on RTX GPUs
     scaler_G = GradScaler('cuda')
-    scaler_D = GradScaler('cuda')  
+    scaler_D = GradScaler('cuda')
 
     best_g_loss = float('inf')  # Tracks the lowest Generator loss to save best model
 
     # Begin training over specified number of epochs
     for epoch in range(epochs):
         sampler.set_epoch(epoch)  # Ensures shuffling across epochs for DistributedSampler
-        print(f"[INFO] Starting epoch {epoch} on rank {rank}")  
+        print(f"[INFO] Starting epoch {epoch} on rank {rank}")
+
+        total_g_loss = 0.0
+        total_d_loss = 0.0
 
         for batch_idx, (imgs, _) in enumerate(train_loader):
             imgs = imgs.view(-1, img_shape).to(device)        # Flatten and move images to correct device
@@ -210,7 +199,7 @@ def train(rank, world_size):
             z = torch.randn(batch_size_curr, latent_dim, device=device)
 
             # Use AMP for forward pass
-            with autocast(device_type='cuda'):  
+            with autocast(device_type='cuda'):
                 fake_imgs = G(z).detach()
                 real_loss = criterion(D(imgs), valid)
                 fake_loss = criterion(D(fake_imgs), fake)
@@ -218,55 +207,69 @@ def train(rank, world_size):
 
             # Optimize with AMP scaler
             optimizer_D.zero_grad()
-            scaler_D.scale(d_loss).backward()  
-            scaler_D.step(optimizer_D)         
-            scaler_D.update()                  
+            scaler_D.scale(d_loss).backward()
+            scaler_D.step(optimizer_D)
+            scaler_D.update()
 
             # ======================
             #  Train Generator
             # ======================
 
             z = torch.randn(batch_size_curr, latent_dim, device=device)
-
             with autocast(device_type='cuda'):
                 gen_imgs = G(z)
                 g_loss = criterion(D(gen_imgs), valid)
 
             optimizer_G.zero_grad()
-            scaler_G.scale(g_loss).backward()  
-            scaler_G.step(optimizer_G)         
-            scaler_G.update()                  
+            scaler_G.scale(g_loss).backward()
+            scaler_G.step(optimizer_G)
+            scaler_G.update()
 
             # Print training progress for monitoring
             if batch_idx % 100 == 0 and rank == 0:
                 print(f"[Epoch {epoch}/{epochs}] [Batch {batch_idx}/{len(train_loader)}] "
-                    f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss.item():.4f}]")
+                      f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss.item():.4f}]")
+
+            total_g_loss += g_loss.item()
+            total_d_loss += d_loss.item()
+
+        # Step LR schedulers
+        scheduler_G.step()
+        scheduler_D.step()
 
         # ======================
         #  Save Output & Checkpoints
         # ======================
         if rank == 0:
-            print(f"[INFO] Saving checkpoint and samples for epoch {epoch}")  
-            G.eval()  # switch generator to eval mode for consistent inference
+            avg_g_loss = total_g_loss / len(train_loader)
+            avg_d_loss = total_d_loss / len(train_loader)
+            lr_G = scheduler_G.get_last_lr()[0]
+            lr_D = scheduler_D.get_last_lr()[0]
+
+            print(f"[Epoch {epoch}/{epochs}] Avg D Loss: {avg_d_loss:.4f} | "
+                  f"Avg G Loss: {avg_g_loss:.4f} | LR_G: {lr_G:.6f} | LR_D: {lr_D:.6f}")
+            print(f"[INFO] Saving checkpoint and samples for epoch {epoch}")
+
+            G.eval()
             with torch.no_grad():
                 z = torch.randn(25, latent_dim, device=device)
                 samples = G.module(z).view(-1, 1, 28, 28)
-                save_image(samples, f"{save_dir}/epoch_{epoch}.png", nrow=5, normalize=True)  # save sample images for visual inspection
-            G.train()  # switch back to training mode after saving samples
+                save_image(samples, f"{save_dir}/epoch_{epoch}.png", nrow=5, normalize=True)
+            G.train()
 
-            # Save checkpoint for every epoch
+            # Save checkpoint
             torch.save(G.module.state_dict(), os.path.join(checkpoint_dir, f"generator_epoch_{epoch}.pth"))
             torch.save(D.module.state_dict(), os.path.join(checkpoint_dir, f"discriminator_epoch_{epoch}.pth"))
 
-            # Save best Generator model based on g_loss
-            if g_loss.item() < best_g_loss:
-                best_g_loss = g_loss.item()
+            # Save best Generator model
+            if avg_g_loss < best_g_loss:
+                best_g_loss = avg_g_loss
                 torch.save(G.module.state_dict(), os.path.join(checkpoint_dir, "best_generator.pth"))
                 torch.save(D.module.state_dict(), os.path.join(checkpoint_dir, "best_discriminator.pth"))
-                print(f"[INFO] New best model saved with G loss: {best_g_loss:.4f}")  
+                print(f"[INFO] New best model saved with G loss: {best_g_loss:.4f}")
 
     # Clean up the process group
-    print(f"[INFO] Finished training on rank {rank}, cleaning up...")  
+    print(f"[INFO] Finished training on rank {rank}, cleaning up...")
     dist.destroy_process_group()
 
 # Launch distributed training using multiple processes (one per GPU)
