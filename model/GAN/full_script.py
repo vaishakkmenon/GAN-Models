@@ -26,6 +26,7 @@ latent_dim = 100
 img_shape = 28 * 28
 batch_size = 256
 epochs = 100
+warmup_epochs = 25
 save_dir = "generated-latest"
 os.makedirs(save_dir, exist_ok=True)
 
@@ -270,13 +271,14 @@ def train(rank, world_size):
                 torch.save(G.module.state_dict(), os.path.join(checkpoint_dir, "best_generator.pth"))
                 torch.save(D.module.state_dict(), os.path.join(checkpoint_dir, "best_discriminator.pth"))
                 print(f"[INFO] New best model saved with G loss: {best_g_loss:.4f}")
-            else:
+            elif epoch >= warmup_epochs:
                 patience_counter += 1
                 print(f"[INFO] No improvement. Early stopping counter: {patience_counter}/{patience}")
-
                 if patience_counter >= patience:
                     print(f"[INFO] Early stopping triggered at epoch {epoch}")
                     break
+            else:
+                print(f"[INFO] Warm-up epoch {epoch} – skipping early stopping check.")
 
     # Clean up the process group
     print(f"[INFO] Finished training on rank {rank}, cleaning up...")
