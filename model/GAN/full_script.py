@@ -184,8 +184,8 @@ def train(rank, world_size):
     optimizer_D = optim.Adam(D.parameters(), lr=0.0002, betas=(0.5, 0.999))
 
     # AMP scalers for mixed precision training on RTX GPUs
-    scaler_G = GradScaler(device_type='cuda')
-    scaler_D = GradScaler(device_type='cuda')  
+    scaler_G = GradScaler('cuda')
+    scaler_D = GradScaler('cuda')  
 
     best_g_loss = float('inf')  # Tracks the lowest Generator loss to save best model
 
