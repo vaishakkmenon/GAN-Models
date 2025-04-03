@@ -143,7 +143,13 @@ class Discriminator(nn.Module):
 
 def train(rank, world_size):
     # Initializes the distributed training process
-    dist.init_process_group("nccl", rank=rank, world_size=world_size)
+    try:
+        dist.init_process_group("nccl", rank=rank, world_size=world_size)
+        print(f"[INFO] Process group initialized for rank {rank}")
+    except Exception as e:
+        print(f"[ERROR] Failed to initialize process group for rank {rank}: {e}")
+        return
+    # dist.init_process_group("nccl", rank=rank, world_size=world_size)
     torch.cuda.set_device(rank)
     device = torch.device(f"cuda:{rank}")
 
