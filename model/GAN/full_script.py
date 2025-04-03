@@ -10,7 +10,7 @@ import torch.optim as optim
 from torchvision.utils import save_image
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, ConcatDataset
-from torch.optim.lr_scheduler import StepLR
+from torch.optim.lr_scheduler import StepLR, CosineAnnealingLR
 
 # Distributed Data Parallel Imports
 import torch.distributed as dist
@@ -163,12 +163,15 @@ def train(rank, world_size):
     criterion = nn.BCEWithLogitsLoss()
 
     # Adam optimizers for Generator and Discriminator
-    optimizer_G = optim.Adam(G.parameters(), lr=0.0002, betas=(0.5, 0.999))
-    optimizer_D = optim.Adam(D.parameters(), lr=0.0002, betas=(0.5, 0.999))
+    optimizer_G = optim.Adam(G.parameters(), lr=0.0003, betas=(0.5, 0.999))
+    optimizer_D = optim.Adam(D.parameters(), lr=0.0003, betas=(0.5, 0.999))
 
     # Learning Rate Scheduler for optimizers
-    scheduler_G = StepLR(optimizer_G, step_size=10, gamma=0.5)
-    scheduler_D = StepLR(optimizer_D, step_size=10, gamma=0.5)
+    # scheduler_G = StepLR(optimizer_G, step_size=10, gamma=0.5)
+    # scheduler_D = StepLR(optimizer_D, step_size=10, gamma=0.5)
+
+    scheduler_G = CosineAnnealingLR(optimizer_G, T_max=epochs, eta_min=1e-6)
+    scheduler_D = CosineAnnealingLR(optimizer_D, T_max=epochs, eta_min=1e-6)
 
     # AMP scalers for mixed precision training on RTX GPUs
     scaler_G = GradScaler('cuda')
