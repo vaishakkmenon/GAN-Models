@@ -25,7 +25,7 @@ from torch.amp import autocast, GradScaler
 latent_dim = 100
 img_shape = 28 * 28
 batch_size = 256
-epochs = 50
+epochs = 100
 save_dir = "generated-latest"
 os.makedirs(save_dir, exist_ok=True)
 
@@ -230,7 +230,7 @@ def train(rank, world_size):
             # Print training progress for monitoring
             if batch_idx % 100 == 0 and rank == 0:
                 print(f"[Epoch {epoch}/{epochs}] [Batch {batch_idx}/{len(train_loader)}] "
-                      f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss.item():.4f}]")
+                    f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss.item():.4f}]")
 
             total_g_loss += g_loss.item()
             total_d_loss += d_loss.item()
@@ -249,7 +249,7 @@ def train(rank, world_size):
             lr_D = scheduler_D.get_last_lr()[0]
 
             print(f"[Epoch {epoch}/{epochs}] Avg D Loss: {avg_d_loss:.4f} | "
-                  f"Avg G Loss: {avg_g_loss:.4f} | LR_G: {lr_G:.6f} | LR_D: {lr_D:.6f}")
+                f"Avg G Loss: {avg_g_loss:.4f} | LR_G: {lr_G:.6f} | LR_D: {lr_D:.6f}")
             print(f"[INFO] Saving checkpoint and samples for epoch {epoch}")
 
             G.eval()
