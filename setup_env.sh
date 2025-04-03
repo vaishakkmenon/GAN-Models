@@ -16,8 +16,8 @@ pip install torch torchvision torchaudio --extra-index-url https://download.pyto
 pip install numpy
 
 # Optional: Install NCCL if needed
-# echo "[INFO] Installing NCCL..."
-# sudo apt-get install libnccl-dev
+echo "[INFO] Installing NCCL..."
+sudo apt-get install libnccl-dev
 
 # 3. Check if CUDA is available and PyTorch works
 echo "[INFO] Verifying CUDA availability in PyTorch..."
