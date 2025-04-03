@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Project root and paths
-PROJECT_ROOT="/workspace/GAN-model"
+PROJECT_ROOT="/workspace/GAN-Models"
 SCRIPT_PATH="$PROJECT_ROOT/model/GAN/full_script.py"
 VENV_DIR="$PROJECT_ROOT/gan_env"
 PYTHON_VERSION=3.10
