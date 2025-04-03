@@ -6,11 +6,13 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import matplotlib.pyplot as plt
 
 from torchvision.utils import save_image
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, ConcatDataset
 from torch.optim.lr_scheduler import StepLR, CosineAnnealingLR
+
 
 # Distributed Data Parallel Imports
 import torch.distributed as dist
@@ -180,6 +182,12 @@ def train(rank, world_size):
     best_g_loss = float('inf')
     patience = 20
     patience_counter = 0
+    
+    lr_history_G = []
+    lr_history_D = []
+    
+    g_losses = []
+    d_losses = []
 
     # Begin training over specified number of epochs
     for epoch in range(epochs):
@@ -242,6 +250,9 @@ def train(rank, world_size):
         # Step LR schedulers
         scheduler_G.step()
         scheduler_D.step()
+        
+        lr_history_G.append(scheduler_G.get_last_lr()[0])
+        lr_history_D.append(scheduler_D.get_last_lr()[0])
 
         # ======================
         #  Save Output & Checkpoints
@@ -249,6 +260,10 @@ def train(rank, world_size):
         if rank == 0:
             avg_g_loss = total_g_loss / len(train_loader)
             avg_d_loss = total_d_loss / len(train_loader)
+            
+            g_losses.append(avg_g_loss)
+            d_losses.append(avg_d_loss)
+            
             lr_G = scheduler_G.get_last_lr()[0]
             lr_D = scheduler_D.get_last_lr()[0]
 
@@ -287,6 +302,30 @@ def train(rank, world_size):
     # Clean up the process group
     print(f"[INFO] Finished training on rank {rank}, cleaning up...")
     dist.destroy_process_group()
+    
+    plt.figure(figsize=(8, 4))
+    plt.plot(lr_history_G, label='Generator LR', marker='o')
+    plt.plot(lr_history_D, label='Discriminator LR', marker='x')
+    plt.title('Cosine Annealing Learning Rate Schedule')
+    plt.xlabel('Epoch')
+    plt.ylabel('Learning Rate')
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig("lr_schedule_plot.png")
+    print("[INFO] Learning rate schedule plot saved as lr_schedule_plot.png")
+    
+    plt.figure(figsize=(8, 4))
+    plt.plot(g_losses, label='Generator Loss', marker='o')
+    plt.plot(d_losses, label='Discriminator Loss', marker='x')
+    plt.title('Generator and Discriminator Loss Per Epoch')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig("loss_plot.png")
+    print("[INFO] Loss plot saved as loss_plot.png")
 
 # Launch distributed training using multiple processes (one per GPU)
 if __name__ == "__main__":
