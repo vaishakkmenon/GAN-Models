@@ -44,106 +44,454 @@ Requirement already satisfied: six>=1.5 in ./gan_env/lib/python3.10/site-package
 [INFO] Running full_script.py with Distributed Data Parallel on 4 GPUs...
 [INFO] Launching Training
 [INFO] Process group initialized for rank 3
-[INFO] Process group initialized for rank 1
+[INFO] Process group initialized for rank 2
 [INFO] Initialized process group and set device for rank 3
 cuda:3
-[INFO] Resolved dataset path: /workspace/GAN-Models/data/mnist/
-[INFO] Process group initialized for rank 2
-[INFO] Process group initialized for rank 0
-[INFO] Initialized process group and set device for rank 1
-cuda:1
 [INFO] Resolved dataset path: /workspace/GAN-Models/data/mnist/
 [INFO] Returning Full Dataset for DDP
 [INFO] Dataset loaded and DataLoader created on rank 3
 [INFO] Moving models to device and wrapping with DDP on rank 3
 [DEBUG] Initializing Generator and Discriminator models on rank 3
-[INFO] Initialized process group and set device for rank 0
-cuda:0
-[INFO] Resolved dataset path: /workspace/GAN-Models/data/mnist/
 [DEBUG] Models initialized on rank 3
-[INFO] Returning Full Dataset for DDP
-[INFO] Dataset loaded and DataLoader created on rank 1
-[INFO] Moving models to device and wrapping with DDP on rank 1
-[DEBUG] Initializing Generator and Discriminator models on rank 1
-[DEBUG] Models initialized on rank 1
-[INFO] Returning Full Dataset for DDP
-[INFO] Dataset loaded and DataLoader created on rank 0
-[INFO] Moving models to device and wrapping with DDP on rank 0
-[DEBUG] Initializing Generator and Discriminator models on rank 0
+[INFO] Process group initialized for rank 0
+[INFO] Process group initialized for rank 1
 [INFO] Initialized process group and set device for rank 2
 cuda:2
+[INFO] Resolved dataset path: /workspace/GAN-Models/data/mnist/
+[INFO] Initialized process group and set device for rank 0
+cuda:0
 [INFO] Resolved dataset path: /workspace/GAN-Models/data/mnist/
 [INFO] Returning Full Dataset for DDP
 [INFO] Dataset loaded and DataLoader created on rank 2
 [INFO] Moving models to device and wrapping with DDP on rank 2
 [DEBUG] Initializing Generator and Discriminator models on rank 2
+[INFO] Returning Full Dataset for DDP
+[INFO] Dataset loaded and DataLoader created on rank 0
+[INFO] Moving models to device and wrapping with DDP on rank 0
+[DEBUG] Initializing Generator and Discriminator models on rank 0
 [DEBUG] Models initialized on rank 2
+[INFO] Initialized process group and set device for rank 1
+cuda:1
+[INFO] Resolved dataset path: /workspace/GAN-Models/data/mnist/
 [DEBUG] Models initialized on rank 0
-[INFO] Models moved to device and wrapped in DDP on rank 1
+[INFO] Returning Full Dataset for DDP
+[INFO] Dataset loaded and DataLoader created on rank 1
+[INFO] Moving models to device and wrapping with DDP on rank 1
+[DEBUG] Initializing Generator and Discriminator models on rank 1
+[DEBUG] Models initialized on rank 1
 [INFO] Models moved to device and wrapped in DDP on rank 0
-[INFO] Models moved to device and wrapped in DDP on rank 2
-[INFO] Models moved to device and wrapped in DDP on rank 3
-/workspace/GAN-Models/model/GAN/full_script.py:189: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
-  scaler_G = GradScaler()
-/workspace/GAN-Models/model/GAN/full_script.py:190: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
-  scaler_D = GradScaler()
-[INFO] Starting epoch 0 on rank 1
-/workspace/GAN-Models/model/GAN/full_script.py:189: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
-  scaler_G = GradScaler()
-/workspace/GAN-Models/model/GAN/full_script.py:189: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
-  scaler_G = GradScaler()
-/workspace/GAN-Models/model/GAN/full_script.py:190: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
-  scaler_D = GradScaler()
-[INFO] Starting epoch 0 on rank 2
-/workspace/GAN-Models/model/GAN/full_script.py:190: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
-  scaler_D = GradScaler()
 [INFO] Starting epoch 0 on rank 0
-/workspace/GAN-Models/model/GAN/full_script.py:189: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
-  scaler_G = GradScaler()
-/workspace/GAN-Models/model/GAN/full_script.py:190: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
-  scaler_D = GradScaler()
+[INFO] Models moved to device and wrapped in DDP on rank 1
+[INFO] Models moved to device and wrapped in DDP on rank 2
+[INFO] Starting epoch 0 on rank 1
+[INFO] Starting epoch 0 on rank 2
+[INFO] Models moved to device and wrapped in DDP on rank 3
 [INFO] Starting epoch 0 on rank 3
-/workspace/GAN-Models/model/GAN/full_script.py:215: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-  with autocast():
-/workspace/GAN-Models/model/GAN/full_script.py:215: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-  with autocast():
-/workspace/GAN-Models/model/GAN/full_script.py:215: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-  with autocast():
-/workspace/GAN-Models/model/GAN/full_script.py:215: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-  with autocast():
-[rank0]:[W403 18:58:39.524909834 ProcessGroupNCCL.cpp:1250] Warning: WARNING: process group has NOT been destroyed before we destruct ProcessGroupNCCL. On normal program exit, the application should call destroy_process_group to ensure that any pending NCCL operations have finished in this process. In rare cases this process can exit before this point and block the progress of another member of the process group. This constraint has always been present,  but this warning has only been added since PyTorch 2.4 (function operator())
-W0403 18:58:41.083000 4832 torch/multiprocessing/spawn.py:160] Terminating process 4898 via signal SIGTERM
-W0403 18:58:41.084000 4832 torch/multiprocessing/spawn.py:160] Terminating process 4899 via signal SIGTERM
-W0403 18:58:41.084000 4832 torch/multiprocessing/spawn.py:160] Terminating process 4900 via signal SIGTERM
-Traceback (most recent call last):
-  File "/workspace/GAN-Models/model/GAN/full_script.py", line 281, in <module>
-    mp.spawn(train, args=(world_size,), nprocs=world_size, join=True)
-  File "/workspace/GAN-Models/gan_env/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 328, in spawn
-    return start_processes(fn, args, nprocs, join, daemon, start_method="spawn")
-  File "/workspace/GAN-Models/gan_env/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 284, in start_processes
-    while not context.join():
-  File "/workspace/GAN-Models/gan_env/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 203, in join
-    raise ProcessRaisedException(msg, error_index, failed_process.pid)
-torch.multiprocessing.spawn.ProcessRaisedException: 
-
--- Process 0 terminated with the following error:
-Traceback (most recent call last):
-  File "/workspace/GAN-Models/gan_env/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 90, in _wrap
-    fn(i, *args)
-  File "/workspace/GAN-Models/model/GAN/full_script.py", line 217, in train
-    real_loss = criterion(D(imgs), valid)
-  File "/workspace/GAN-Models/gan_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/workspace/GAN-Models/gan_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/workspace/GAN-Models/gan_env/lib/python3.10/site-packages/torch/nn/modules/loss.py", line 697, in forward
-    return F.binary_cross_entropy(
-  File "/workspace/GAN-Models/gan_env/lib/python3.10/site-packages/torch/nn/functional.py", line 3554, in binary_cross_entropy
-    return torch._C._nn.binary_cross_entropy(input, target, weight, reduction_enum)
-RuntimeError: torch.nn.functional.binary_cross_entropy and torch.nn.BCELoss are unsafe to autocast.
-Many models use a sigmoid layer right before the binary cross entropy layer.
-In this case, combine the two layers using torch.nn.functional.binary_cross_entropy_with_logits
-or torch.nn.BCEWithLogitsLoss.  binary_cross_entropy_with_logits and BCEWithLogits are
-safe to autocast.
-
+[Epoch 0/50] [Batch 0/274] [D loss: 0.7106] [G loss: 0.6905]
+[Epoch 0/50] [Batch 100/274] [D loss: 0.6332] [G loss: 0.6592]
+[Epoch 0/50] [Batch 200/274] [D loss: 0.6062] [G loss: 0.8795]
+[INFO] Starting epoch 1 on rank 3
+[INFO] Saving checkpoint and samples for epoch 0
+[INFO] New best model saved with G loss: 0.8973
+[INFO] Starting epoch 1 on rank 0
+[INFO] Starting epoch 1 on rank 1
+[INFO] Starting epoch 1 on rank 2
+[Epoch 1/50] [Batch 0/274] [D loss: 0.5697] [G loss: 0.8545]
+[Epoch 1/50] [Batch 100/274] [D loss: 0.5339] [G loss: 0.9716]
+[Epoch 1/50] [Batch 200/274] [D loss: 0.4816] [G loss: 1.9537]
+[INFO] Starting epoch 2 on rank 3
+[INFO] Starting epoch 2 on rank 1
+[INFO] Starting epoch 2 on rank 2
+[INFO] Saving checkpoint and samples for epoch 1
+[INFO] Starting epoch 2 on rank 0
+[Epoch 2/50] [Batch 0/274] [D loss: 0.5365] [G loss: 0.8767]
+[Epoch 2/50] [Batch 100/274] [D loss: 0.4401] [G loss: 1.2754]
+[Epoch 2/50] [Batch 200/274] [D loss: 0.4566] [G loss: 0.9765]
+[INFO] Starting epoch 3 on rank 3
+[INFO] Starting epoch 3 on rank 2
+[INFO] Starting epoch 3 on rank 1
+[INFO] Saving checkpoint and samples for epoch 2
+[INFO] New best model saved with G loss: 0.8755
+[INFO] Starting epoch 3 on rank 0
+[Epoch 3/50] [Batch 0/274] [D loss: 0.5012] [G loss: 1.5779]
+[Epoch 3/50] [Batch 100/274] [D loss: 0.4519] [G loss: 1.3667]
+[Epoch 3/50] [Batch 200/274] [D loss: 0.4685] [G loss: 0.9404]
+[INFO] Starting epoch 4 on rank 3
+[INFO] Saving checkpoint and samples for epoch 3
+[INFO] Starting epoch 4 on rank 1
+[INFO] Starting epoch 4 on rank 0
+[INFO] Starting epoch 4 on rank 2
+[Epoch 4/50] [Batch 0/274] [D loss: 0.3854] [G loss: 1.2773]
+[Epoch 4/50] [Batch 100/274] [D loss: 0.4274] [G loss: 1.8048]
+[Epoch 4/50] [Batch 200/274] [D loss: 0.4720] [G loss: 1.1329]
+[INFO] Saving checkpoint and samples for epoch 4
+[INFO] Starting epoch 5 on rank 0
+[INFO] Starting epoch 5 on rank 1
+[INFO] Starting epoch 5 on rank 2
+[INFO] Starting epoch 5 on rank 3
+[Epoch 5/50] [Batch 0/274] [D loss: 0.4156] [G loss: 1.7574]
+[Epoch 5/50] [Batch 100/274] [D loss: 0.4314] [G loss: 2.6362]
+[Epoch 5/50] [Batch 200/274] [D loss: 0.6445] [G loss: 0.5605]
+[INFO] Saving checkpoint and samples for epoch 5
+[INFO] Starting epoch 6 on rank 2
+[INFO] Starting epoch 6 on rank 1
+[INFO] Starting epoch 6 on rank 0
+[INFO] Starting epoch 6 on rank 3
+[Epoch 6/50] [Batch 0/274] [D loss: 0.4284] [G loss: 1.6210]
+[Epoch 6/50] [Batch 100/274] [D loss: 0.4115] [G loss: 1.0473]
+[Epoch 6/50] [Batch 200/274] [D loss: 0.3782] [G loss: 1.6883]
+[INFO] Starting epoch 7 on rank 2
+[INFO] Starting epoch 7 on rank 1
+[INFO] Saving checkpoint and samples for epoch 6
+[INFO] Starting epoch 7 on rank 0
+[INFO] Starting epoch 7 on rank 3
+[Epoch 7/50] [Batch 0/274] [D loss: 0.4021] [G loss: 1.3028]
+[Epoch 7/50] [Batch 100/274] [D loss: 0.5311] [G loss: 0.7746]
+[Epoch 7/50] [Batch 200/274] [D loss: 0.5025] [G loss: 0.8965]
+[INFO] Starting epoch 8 on rank 1
+[INFO] Starting epoch 8 on rank 2
+[INFO] Saving checkpoint and samples for epoch 7
+[INFO] Starting epoch 8 on rank 0
+[INFO] Starting epoch 8 on rank 3
+[Epoch 8/50] [Batch 0/274] [D loss: 0.3572] [G loss: 1.2795]
+[Epoch 8/50] [Batch 100/274] [D loss: 0.5846] [G loss: 2.6291]
+[Epoch 8/50] [Batch 200/274] [D loss: 0.3519] [G loss: 1.5114]
+[INFO] Starting epoch 9 on rank 2
+[INFO] Saving checkpoint and samples for epoch 8
+[INFO] Starting epoch 9 on rank 3
+[INFO] Starting epoch 9 on rank 0
+[INFO] Starting epoch 9 on rank 1
+[Epoch 9/50] [Batch 0/274] [D loss: 0.4583] [G loss: 1.9741]
+[Epoch 9/50] [Batch 100/274] [D loss: 0.4457] [G loss: 1.7033]
+[Epoch 9/50] [Batch 200/274] [D loss: 0.4272] [G loss: 1.4413]
+[INFO] Starting epoch 10 on rank 2
+[INFO] Starting epoch 10 on rank 3
+[INFO] Starting epoch 10 on rank 1
+[INFO] Saving checkpoint and samples for epoch 9
+[INFO] New best model saved with G loss: 0.7721
+[INFO] Starting epoch 10 on rank 0
+[Epoch 10/50] [Batch 0/274] [D loss: 0.4619] [G loss: 2.5043]
+[Epoch 10/50] [Batch 100/274] [D loss: 0.4580] [G loss: 1.2241]
+[Epoch 10/50] [Batch 200/274] [D loss: 0.4085] [G loss: 2.2797]
+[INFO] Starting epoch 11 on rank 2
+[INFO] Starting epoch 11 on rank 3
+[INFO] Saving checkpoint and samples for epoch 10
+[INFO] Starting epoch 11 on rank 1
+[INFO] Starting epoch 11 on rank 0
+[Epoch 11/50] [Batch 0/274] [D loss: 0.4183] [G loss: 2.1427]
+[Epoch 11/50] [Batch 100/274] [D loss: 0.4087] [G loss: 1.8591]
+[Epoch 11/50] [Batch 200/274] [D loss: 0.4388] [G loss: 1.1309]
+[INFO] Starting epoch 12 on rank 2
+[INFO] Saving checkpoint and samples for epoch 11
+[INFO] Starting epoch 12 on rank 0
+[INFO] Starting epoch 12 on rank 1
+[INFO] Starting epoch 12 on rank 3
+[Epoch 12/50] [Batch 0/274] [D loss: 0.4553] [G loss: 2.0684]
+[Epoch 12/50] [Batch 100/274] [D loss: 0.5326] [G loss: 2.5962]
+[Epoch 12/50] [Batch 200/274] [D loss: 0.6068] [G loss: 2.8006]
+[INFO] Starting epoch 13 on rank 1
+[INFO] Saving checkpoint and samples for epoch 12
+[INFO] Starting epoch 13 on rank 0
+[INFO] Starting epoch 13 on rank 2
+[INFO] Starting epoch 13 on rank 3
+[Epoch 13/50] [Batch 0/274] [D loss: 0.3879] [G loss: 1.6314]
+[Epoch 13/50] [Batch 100/274] [D loss: 0.3996] [G loss: 1.4039]
+[Epoch 13/50] [Batch 200/274] [D loss: 0.3849] [G loss: 1.3808]
+[INFO] Starting epoch 14 on rank 3
+[INFO] Starting epoch 14 on rank 1
+[INFO] Saving checkpoint and samples for epoch 13
+[INFO] Starting epoch 14 on rank 2
+[INFO] New best model saved with G loss: 0.7512
+[INFO] Starting epoch 14 on rank 0
+[Epoch 14/50] [Batch 0/274] [D loss: 0.5538] [G loss: 2.2194]
+[Epoch 14/50] [Batch 100/274] [D loss: 0.3971] [G loss: 1.0177]
+[Epoch 14/50] [Batch 200/274] [D loss: 0.6147] [G loss: 0.8041]
+[INFO] Starting epoch 15 on rank 1
+[INFO] Starting epoch 15 on rank 3
+[INFO] Saving checkpoint and samples for epoch 14
+[INFO] Starting epoch 15 on rank 0
+[INFO] Starting epoch 15 on rank 2
+[Epoch 15/50] [Batch 0/274] [D loss: 0.4202] [G loss: 1.1956]
+[Epoch 15/50] [Batch 100/274] [D loss: 0.4975] [G loss: 0.5330]
+[Epoch 15/50] [Batch 200/274] [D loss: 0.4643] [G loss: 1.3500]
+[INFO] Starting epoch 16 on rank 3
+[INFO] Saving checkpoint and samples for epoch 15
+[INFO] Starting epoch 16 on rank 0
+[INFO] Starting epoch 16 on rank 1
+[INFO] Starting epoch 16 on rank 2
+[Epoch 16/50] [Batch 0/274] [D loss: 0.4201] [G loss: 1.0697]
+[Epoch 16/50] [Batch 100/274] [D loss: 0.4906] [G loss: 0.8641]
+[Epoch 16/50] [Batch 200/274] [D loss: 0.3962] [G loss: 1.4723]
+[INFO] Starting epoch 17 on rank 2
+[INFO] Starting epoch 17 on rank 1
+[INFO] Saving checkpoint and samples for epoch 16
+[INFO] Starting epoch 17 on rank 3
+[INFO] Starting epoch 17 on rank 0
+[Epoch 17/50] [Batch 0/274] [D loss: 0.4062] [G loss: 1.1199]
+[Epoch 17/50] [Batch 100/274] [D loss: 0.4984] [G loss: 1.1937]
+[Epoch 17/50] [Batch 200/274] [D loss: 0.3736] [G loss: 1.4587]
+[INFO] Starting epoch 18 on rank 3
+[INFO] Starting epoch 18 on rank 1
+[INFO] Starting epoch 18 on rank 2
+[INFO] Saving checkpoint and samples for epoch 17
+[INFO] Starting epoch 18 on rank 0
+[Epoch 18/50] [Batch 0/274] [D loss: 0.5756] [G loss: 2.2045]
+[Epoch 18/50] [Batch 100/274] [D loss: 0.4733] [G loss: 1.3058]
+[Epoch 18/50] [Batch 200/274] [D loss: 0.5276] [G loss: 2.0343]
+[INFO] Starting epoch 19 on rank 3
+[INFO] Starting epoch 19 on rank 1
+[INFO] Saving checkpoint and samples for epoch 18
+[INFO] Starting epoch 19 on rank 2
+[INFO] Starting epoch 19 on rank 0
+[Epoch 19/50] [Batch 0/274] [D loss: 0.4857] [G loss: 0.9533]
+[Epoch 19/50] [Batch 100/274] [D loss: 0.5936] [G loss: 0.4676]
+[Epoch 19/50] [Batch 200/274] [D loss: 0.4802] [G loss: 1.7291]
+[INFO] Starting epoch 20 on rank 1
+[INFO] Starting epoch 20 on rank 3
+[INFO] Saving checkpoint and samples for epoch 19
+[INFO] Starting epoch 20 on rank 0
+[INFO] Starting epoch 20 on rank 2
+[Epoch 20/50] [Batch 0/274] [D loss: 0.4376] [G loss: 1.4105]
+[Epoch 20/50] [Batch 100/274] [D loss: 0.4995] [G loss: 0.7244]
+[Epoch 20/50] [Batch 200/274] [D loss: 0.4873] [G loss: 1.3952]
+[INFO] Starting epoch 21 on rank 3
+[INFO] Starting epoch 21 on rank 2
+[INFO] Starting epoch 21 on rank 1
+[INFO] Saving checkpoint and samples for epoch 20
+[INFO] Starting epoch 21 on rank 0
+[Epoch 21/50] [Batch 0/274] [D loss: 0.4979] [G loss: 1.5677]
+[Epoch 21/50] [Batch 100/274] [D loss: 0.4747] [G loss: 1.0043]
+[Epoch 21/50] [Batch 200/274] [D loss: 0.5142] [G loss: 1.5599]
+[INFO] Starting epoch 22 on rank 1
+[INFO] Saving checkpoint and samples for epoch 21
+[INFO] Starting epoch 22 on rank 0
+[INFO] Starting epoch 22 on rank 2
+[INFO] Starting epoch 22 on rank 3
+[Epoch 22/50] [Batch 0/274] [D loss: 0.4984] [G loss: 1.1512]
+[Epoch 22/50] [Batch 100/274] [D loss: 0.5432] [G loss: 1.7280]
+[Epoch 22/50] [Batch 200/274] [D loss: 0.5311] [G loss: 0.7233]
+[INFO] Starting epoch 23 on rank 3
+[INFO] Starting epoch 23 on rank 1
+[INFO] Saving checkpoint and samples for epoch 22
+[INFO] Starting epoch 23 on rank 0
+[INFO] Starting epoch 23 on rank 2
+[Epoch 23/50] [Batch 0/274] [D loss: 0.5651] [G loss: 1.0136]
+[Epoch 23/50] [Batch 100/274] [D loss: 0.4840] [G loss: 1.4424]
+[Epoch 23/50] [Batch 200/274] [D loss: 0.5003] [G loss: 1.4428]
+[INFO] Starting epoch 24 on rank 1
+[INFO] Saving checkpoint and samples for epoch 23
+[INFO] Starting epoch 24 on rank 3
+[INFO] New best model saved with G loss: 0.6427
+[INFO] Starting epoch 24 on rank 0
+[INFO] Starting epoch 24 on rank 2
+[Epoch 24/50] [Batch 0/274] [D loss: 0.5666] [G loss: 1.6136]
+[Epoch 24/50] [Batch 100/274] [D loss: 0.5390] [G loss: 1.6111]
+[Epoch 24/50] [Batch 200/274] [D loss: 0.5183] [G loss: 1.2326]
+[INFO] Starting epoch 25 on rank 3
+[INFO] Starting epoch 25 on rank 1
+[INFO] Starting epoch 25 on rank 2
+[INFO] Saving checkpoint and samples for epoch 24
+[INFO] Starting epoch 25 on rank 0
+[Epoch 25/50] [Batch 0/274] [D loss: 0.4669] [G loss: 1.3938]
+[Epoch 25/50] [Batch 100/274] [D loss: 0.4886] [G loss: 0.9690]
+[Epoch 25/50] [Batch 200/274] [D loss: 0.5371] [G loss: 0.8488]
+[INFO] Starting epoch 26 on rank 1
+[INFO] Starting epoch 26 on rank 3
+[INFO] Saving checkpoint and samples for epoch 25
+[INFO] Starting epoch 26 on rank 0
+[INFO] Starting epoch 26 on rank 2
+[Epoch 26/50] [Batch 0/274] [D loss: 0.5231] [G loss: 1.9892]
+[Epoch 26/50] [Batch 100/274] [D loss: 0.8123] [G loss: 0.3154]
+[Epoch 26/50] [Batch 200/274] [D loss: 0.5342] [G loss: 0.8980]
+[INFO] Starting epoch 27 on rank 1
+[INFO] Saving checkpoint and samples for epoch 26
+[INFO] Starting epoch 27 on rank 0
+[INFO] Starting epoch 27 on rank 3
+[INFO] Starting epoch 27 on rank 2
+[Epoch 27/50] [Batch 0/274] [D loss: 0.4908] [G loss: 1.6539]
+[Epoch 27/50] [Batch 100/274] [D loss: 0.4763] [G loss: 1.5457]
+[Epoch 27/50] [Batch 200/274] [D loss: 0.5454] [G loss: 1.8518]
+[INFO] Starting epoch 28 on rank 3
+[INFO] Starting epoch 28 on rank 1
+[INFO] Starting epoch 28 on rank 2
+[INFO] Saving checkpoint and samples for epoch 27
+[INFO] Starting epoch 28 on rank 0
+[Epoch 28/50] [Batch 0/274] [D loss: 0.5283] [G loss: 1.0577]
+[Epoch 28/50] [Batch 100/274] [D loss: 0.5700] [G loss: 0.6682]
+[Epoch 28/50] [Batch 200/274] [D loss: 0.4899] [G loss: 1.4098]
+[INFO] Starting epoch 29 on rank 1
+[INFO] Starting epoch 29 on rank 3
+[INFO] Starting epoch 29 on rank 2
+[INFO] Saving checkpoint and samples for epoch 28
+[INFO] Starting epoch 29 on rank 0
+[Epoch 29/50] [Batch 0/274] [D loss: 0.5785] [G loss: 0.8769]
+[Epoch 29/50] [Batch 100/274] [D loss: 0.5942] [G loss: 0.9493]
+[Epoch 29/50] [Batch 200/274] [D loss: 0.4629] [G loss: 0.9024]
+[INFO] Starting epoch 30 on rank 3
+[INFO] Saving checkpoint and samples for epoch 29
+[INFO] Starting epoch 30 on rank 1
+[INFO] Starting epoch 30 on rank 0
+[INFO] Starting epoch 30 on rank 2
+[Epoch 30/50] [Batch 0/274] [D loss: 0.6930] [G loss: 0.5763]
+[Epoch 30/50] [Batch 100/274] [D loss: 0.5313] [G loss: 1.4048]
+[Epoch 30/50] [Batch 200/274] [D loss: 0.5176] [G loss: 1.3301]
+[INFO] Starting epoch 31 on rank 1
+[INFO] Starting epoch 31 on rank 2
+[INFO] Saving checkpoint and samples for epoch 30
+[INFO] Starting epoch 31 on rank 0
+[INFO] Starting epoch 31 on rank 3
+[Epoch 31/50] [Batch 0/274] [D loss: 0.5897] [G loss: 0.7941]
+[Epoch 31/50] [Batch 100/274] [D loss: 0.4484] [G loss: 0.9877]
+[Epoch 31/50] [Batch 200/274] [D loss: 0.5942] [G loss: 1.0664]
+[INFO] Starting epoch 32 on rank 2
+[INFO] Starting epoch 32 on rank 3
+[INFO] Saving checkpoint and samples for epoch 31
+[INFO] Starting epoch 32 on rank 0
+[INFO] Starting epoch 32 on rank 1
+[Epoch 32/50] [Batch 0/274] [D loss: 0.5503] [G loss: 0.9281]
+[Epoch 32/50] [Batch 100/274] [D loss: 0.5261] [G loss: 0.7774]
+[Epoch 32/50] [Batch 200/274] [D loss: 0.5145] [G loss: 0.9827]
+[INFO] Starting epoch 33 on rank 2
+[INFO] Saving checkpoint and samples for epoch 32
+[INFO] Starting epoch 33 on rank 0
+[INFO] Starting epoch 33 on rank 3
+[INFO] Starting epoch 33 on rank 1
+[Epoch 33/50] [Batch 0/274] [D loss: 0.5990] [G loss: 1.6820]
+[Epoch 33/50] [Batch 100/274] [D loss: 0.5117] [G loss: 1.3981]
+[Epoch 33/50] [Batch 200/274] [D loss: 0.5088] [G loss: 1.2745]
+[INFO] Starting epoch 34 on rank 2
+[INFO] Saving checkpoint and samples for epoch 33
+[INFO] Starting epoch 34 on rank 0
+[INFO] Starting epoch 34 on rank 1
+[INFO] Starting epoch 34 on rank 3
+[Epoch 34/50] [Batch 0/274] [D loss: 0.5280] [G loss: 1.3082]
+[Epoch 34/50] [Batch 100/274] [D loss: 0.5897] [G loss: 0.5971]
+[Epoch 34/50] [Batch 200/274] [D loss: 0.5249] [G loss: 1.6488]
+[INFO] Starting epoch 35 on rank 1
+[INFO] Starting epoch 35 on rank 2
+[INFO] Saving checkpoint and samples for epoch 34
+[INFO] Starting epoch 35 on rank 3
+[INFO] Starting epoch 35 on rank 0
+[Epoch 35/50] [Batch 0/274] [D loss: 0.6696] [G loss: 0.6239]
+[Epoch 35/50] [Batch 100/274] [D loss: 0.6097] [G loss: 0.5678]
+[Epoch 35/50] [Batch 200/274] [D loss: 0.6236] [G loss: 0.5634]
+[INFO] Saving checkpoint and samples for epoch 35
+[INFO] Starting epoch 36 on rank 2
+[INFO] Starting epoch 36 on rank 0
+[INFO] Starting epoch 36 on rank 1
+[INFO] Starting epoch 36 on rank 3
+[Epoch 36/50] [Batch 0/274] [D loss: 0.5482] [G loss: 1.3662]
+[Epoch 36/50] [Batch 100/274] [D loss: 0.6305] [G loss: 1.6335]
+[Epoch 36/50] [Batch 200/274] [D loss: 0.5401] [G loss: 0.8370]
+[INFO] Starting epoch 37 on rank 3
+[INFO] Saving checkpoint and samples for epoch 36
+[INFO] New best model saved with G loss: 0.5916
+[INFO] Starting epoch 37 on rank 0
+[INFO] Starting epoch 37 on rank 1
+[INFO] Starting epoch 37 on rank 2
+[Epoch 37/50] [Batch 0/274] [D loss: 0.6429] [G loss: 1.9919]
+[Epoch 37/50] [Batch 100/274] [D loss: 0.5546] [G loss: 1.3005]
+[Epoch 37/50] [Batch 200/274] [D loss: 0.6244] [G loss: 1.8020]
+[INFO] Starting epoch 38 on rank 3
+[INFO] Starting epoch 38 on rank 1
+[INFO] Saving checkpoint and samples for epoch 37
+[INFO] Starting epoch 38 on rank 2
+[INFO] Starting epoch 38 on rank 0
+[Epoch 38/50] [Batch 0/274] [D loss: 0.5230] [G loss: 0.8013]
+[Epoch 38/50] [Batch 100/274] [D loss: 0.5784] [G loss: 1.1921]
+[Epoch 38/50] [Batch 200/274] [D loss: 0.5647] [G loss: 1.2187]
+[INFO] Starting epoch 39 on rank 2
+[INFO] Saving checkpoint and samples for epoch 38
+[INFO] Starting epoch 39 on rank 0
+[INFO] Starting epoch 39 on rank 3
+[INFO] Starting epoch 39 on rank 1
+[Epoch 39/50] [Batch 0/274] [D loss: 0.5158] [G loss: 1.2192]
+[Epoch 39/50] [Batch 100/274] [D loss: 0.5936] [G loss: 1.2563]
+[Epoch 39/50] [Batch 200/274] [D loss: 0.5337] [G loss: 1.2719]
+[INFO] Starting epoch 40 on rank 3
+[INFO] Starting epoch 40 on rank 2
+[INFO] Saving checkpoint and samples for epoch 39
+[INFO] Starting epoch 40 on rank 1
+[INFO] Starting epoch 40 on rank 0
+[Epoch 40/50] [Batch 0/274] [D loss: 0.5885] [G loss: 1.3808]
+[Epoch 40/50] [Batch 100/274] [D loss: 0.5872] [G loss: 0.8894]
+[Epoch 40/50] [Batch 200/274] [D loss: 0.5701] [G loss: 1.1708]
+[INFO] Starting epoch 41 on rank 3
+[INFO] Starting epoch 41 on rank 1
+[INFO] Saving checkpoint and samples for epoch 40
+[INFO] Starting epoch 41 on rank 2
+[INFO] Starting epoch 41 on rank 0
+[Epoch 41/50] [Batch 0/274] [D loss: 0.5615] [G loss: 0.7428]
+[Epoch 41/50] [Batch 100/274] [D loss: 0.5467] [G loss: 1.1323]
+[Epoch 41/50] [Batch 200/274] [D loss: 0.6585] [G loss: 1.5126]
+[INFO] Saving checkpoint and samples for epoch 41
+[INFO] Starting epoch 42 on rank 0
+[INFO] Starting epoch 42 on rank 3
+[INFO] Starting epoch 42 on rank 2
+[INFO] Starting epoch 42 on rank 1
+[Epoch 42/50] [Batch 0/274] [D loss: 0.5367] [G loss: 0.7459]
+[Epoch 42/50] [Batch 100/274] [D loss: 0.4891] [G loss: 1.0118]
+[Epoch 42/50] [Batch 200/274] [D loss: 0.5380] [G loss: 0.8810]
+[INFO] Starting epoch 43 on rank 2
+[INFO] Starting epoch 43 on rank 1
+[INFO] Starting epoch 43 on rank 3
+[INFO] Saving checkpoint and samples for epoch 42
+[INFO] Starting epoch 43 on rank 0
+[Epoch 43/50] [Batch 0/274] [D loss: 0.5768] [G loss: 1.4396]
+[Epoch 43/50] [Batch 100/274] [D loss: 0.6050] [G loss: 0.6741]
+[Epoch 43/50] [Batch 200/274] [D loss: 0.5826] [G loss: 1.3553]
+[INFO] Saving checkpoint and samples for epoch 43
+[INFO] Starting epoch 44 on rank 0
+[INFO] Starting epoch 44 on rank 1
+[INFO] Starting epoch 44 on rank 3
+[INFO] Starting epoch 44 on rank 2
+[Epoch 44/50] [Batch 0/274] [D loss: 0.6183] [G loss: 0.6954]
+[Epoch 44/50] [Batch 100/274] [D loss: 0.6124] [G loss: 0.8118]
+[Epoch 44/50] [Batch 200/274] [D loss: 0.6284] [G loss: 0.5929]
+[INFO] Starting epoch 45 on rank 1
+[INFO] Starting epoch 45 on rank 3
+[INFO] Starting epoch 45 on rank 2
+[INFO] Saving checkpoint and samples for epoch 44
+[INFO] Starting epoch 45 on rank 0
+[Epoch 45/50] [Batch 0/274] [D loss: 0.5557] [G loss: 1.4415]
+[Epoch 45/50] [Batch 100/274] [D loss: 0.5594] [G loss: 1.1085]
+[Epoch 45/50] [Batch 200/274] [D loss: 0.5980] [G loss: 1.4570]
+[INFO] Starting epoch 46 on rank 1
+[INFO] Starting epoch 46 on rank 3
+[INFO] Saving checkpoint and samples for epoch 45
+[INFO] Starting epoch 46 on rank 0
+[INFO] Starting epoch 46 on rank 2
+[Epoch 46/50] [Batch 0/274] [D loss: 0.5676] [G loss: 1.2571]
+[Epoch 46/50] [Batch 100/274] [D loss: 0.6153] [G loss: 0.4759]
+[Epoch 46/50] [Batch 200/274] [D loss: 0.6034] [G loss: 1.5740]
+[INFO] Starting epoch 47 on rank 1
+[INFO] Starting epoch 47 on rank 3
+[INFO] Starting epoch 47 on rank 2
+[INFO] Saving checkpoint and samples for epoch 46
+[INFO] Starting epoch 47 on rank 0
+[Epoch 47/50] [Batch 0/274] [D loss: 0.5907] [G loss: 0.7587]
+[Epoch 47/50] [Batch 100/274] [D loss: 0.5933] [G loss: 0.6546]
+[Epoch 47/50] [Batch 200/274] [D loss: 0.5196] [G loss: 1.0576]
+[INFO] Starting epoch 48 on rank 1
+[INFO] Starting epoch 48 on rank 2
+[INFO] Saving checkpoint and samples for epoch 47
+[INFO] Starting epoch 48 on rank 3
+[INFO] Starting epoch 48 on rank 0
+[Epoch 48/50] [Batch 0/274] [D loss: 0.5353] [G loss: 1.0937]
+[Epoch 48/50] [Batch 100/274] [D loss: 0.5519] [G loss: 0.7546]
+[Epoch 48/50] [Batch 200/274] [D loss: 0.6012] [G loss: 0.8004]
+[INFO] Starting epoch 49 on rank 2
+[INFO] Starting epoch 49 on rank 3
+[INFO] Saving checkpoint and samples for epoch 48
+[INFO] Starting epoch 49 on rank 0
+[INFO] Starting epoch 49 on rank 1
+[Epoch 49/50] [Batch 0/274] [D loss: 0.6099] [G loss: 0.7168]
+[Epoch 49/50] [Batch 100/274] [D loss: 0.5683] [G loss: 0.8511]
+[Epoch 49/50] [Batch 200/274] [D loss: 0.5955] [G loss: 1.3200]
+[INFO] Finished training on rank 1, cleaning up...
+[INFO] Saving checkpoint and samples for epoch 49
+[INFO] Finished training on rank 0, cleaning up...
+[INFO] Finished training on rank 3, cleaning up...
+[INFO] Finished training on rank 2, cleaning up...
+[INFO] Training complete.
 [INFO] Training completed successfully.
