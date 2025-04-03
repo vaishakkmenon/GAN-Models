@@ -137,9 +137,7 @@ class Discriminator(nn.Module):
         x = self.leaky_relu(x)
 
         x = self.fc3(x)
-        out = self.sigmoid(x)
-
-        return out
+        return x 
 
 def train(rank, world_size):
     # Initializes the distributed training process
@@ -179,7 +177,7 @@ def train(rank, world_size):
     print(f"[INFO] Models moved to device and wrapped in DDP on rank {rank}")  
 
     # Binary cross entropy loss function used for both Discriminator and Generator
-    criterion = nn.BCELoss()
+    criterion = nn.BCEWithLogitsLoss()
 
     # Adam optimizers for Generator and Discriminator
     optimizer_G = optim.Adam(G.parameters(), lr=0.0002, betas=(0.5, 0.999))
