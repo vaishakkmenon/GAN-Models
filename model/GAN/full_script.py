@@ -156,9 +156,17 @@ def train(rank, world_size):
     train_loader = DataLoader(dataset, batch_size=batch_size, sampler=sampler, num_workers=4, pin_memory=True)
     print(f"[INFO] Dataset loaded and DataLoader created on rank {rank}")  
 
-    # Create and distribute the models to GPUs
+    print(f"[INFO] Moving models to device and wrapping with DDP on rank {rank}")
+
+    # Debugging: Check before model initialization
+    print(f"[DEBUG] Initializing Generator and Discriminator models on rank {rank}")
+
+    # Initialize models
     G = Generator(latent_dim, img_shape).to(device)
     D = Discriminator(img_shape).to(device)
+
+    # Debugging: Check after model initialization
+    print(f"[DEBUG] Models initialized on rank {rank}")
 
     G = DDP(G, device_ids=[rank])
     D = DDP(D, device_ids=[rank])
