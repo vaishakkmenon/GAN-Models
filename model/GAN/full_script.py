@@ -274,6 +274,7 @@ def train(rank, world_size):
             elif epoch >= warmup_epochs:
                 patience_counter += 1
                 print(f"[INFO] No improvement. Early stopping counter: {patience_counter}/{patience}")
+                print(f"[INFO] Best G Loss: {best_g_loss}; Latest G Loss: {avg_g_loss}")
                 if patience_counter >= patience:
                     print(f"[INFO] Early stopping triggered at epoch {epoch}")
                     break
