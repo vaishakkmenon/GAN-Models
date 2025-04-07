@@ -1,7 +1,7 @@
 import torch.nn as nn
 
 class Discriminator(nn.Module):
-    def __init__(self, img_shape):
+    def __init__(self, img_shape, use_sigmoid=True):
         super(Discriminator, self).__init__()
         
         # First fully connected layer: takes 784 pixels -> 256 features
@@ -20,6 +20,7 @@ class Discriminator(nn.Module):
     def forward(self, x):
         # Pass the image through each layer, use leakyReLU for non-linear activation, 
         # and sigmoid for final output value
+        # Sigmoid may be ignored based on loss function
         x = self.fc1(x)
         x = self.leaky_relu(x)
 
@@ -27,6 +28,7 @@ class Discriminator(nn.Module):
         x = self.leaky_relu(x)
 
         x = self.fc3(x)
-        out = self.sigmoid(x)
+        if self.use_sigmoid:
+            x = self.sigmoid(x)
 
-        return out
+        return x

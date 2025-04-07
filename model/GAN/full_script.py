@@ -13,7 +13,6 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, ConcatDataset
 from torch.optim.lr_scheduler import StepLR, CosineAnnealingLR
 
-
 # Distributed Data Parallel Imports
 import torch.distributed as dist
 import torch.multiprocessing as mp
@@ -158,6 +157,7 @@ def train(rank, world_size):
     # Initialize models
     G = Generator(latent_dim, img_shape).to(device)
     D = Discriminator(img_shape).to(device)
+    
     G = DDP(G, device_ids=[rank])
     D = DDP(D, device_ids=[rank])
 
