@@ -1,70 +1,0 @@
-W0330 02:17:04.676000 2600 torch/distributed/run.py:792] 
-W0330 02:17:04.676000 2600 torch/distributed/run.py:792] *****************************************
-W0330 02:17:04.676000 2600 torch/distributed/run.py:792] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
-W0330 02:17:04.676000 2600 torch/distributed/run.py:792] *****************************************
-[INFO] Resolved dataset path: /workspace/GAN-Models/model/data/mnist/
-[INFO] Resolved dataset path: /workspace/GAN-Models/model/data/mnist/
-[INFO] Resolved dataset path: /workspace/GAN-Models/model/data/mnist/
-[INFO] Resolved dataset path: /workspace/GAN-Models/model/data/mnist/
-  0%|          | 0.00/9.91M [00:00<?, ?B/s]  0%|          | 0.00/9.91M [00:00<?, ?B/s]  0%|          | 32.8k/9.91M [00:00<01:01, 160kB/s]  0%|          | 32.8k/9.91M [00:00<01:01, 160kB/s]  0%|          | 0.00/9.91M [00:00<?, ?B/s]  0%|          | 0.00/9.91M [00:00<?, ?B/s]  1%|          | 98.3k/9.91M [00:00<00:38, 253kB/s]  1%|          | 98.3k/9.91M [00:00<00:38, 252kB/s]  0%|          | 32.8k/9.91M [00:00<01:01, 161kB/s]  0%|          | 32.8k/9.91M [00:00<01:04, 153kB/s]  2%|▏         | 164k/9.91M [00:00<00:34, 283kB/s]   2%|▏         | 164k/9.91M [00:00<00:34, 282kB/s]   1%|          | 98.3k/9.91M [00:00<00:38, 254kB/s]  1%|          | 98.3k/9.91M [00:00<00:40, 241kB/s]  4%|▎         | 360k/9.91M [00:00<00:17, 548kB/s]  4%|▎         | 360k/9.91M [00:00<00:17, 546kB/s]  2%|▏         | 164k/9.91M [00:00<00:34, 283kB/s]   2%|▏         | 164k/9.91M [00:00<00:36, 270kB/s]   8%|▊         | 754k/9.91M [00:01<00:08, 1.04MB/s]  4%|▎         | 360k/9.91M [00:00<00:17, 548kB/s]  8%|▊         | 754k/9.91M [00:01<00:08, 1.03MB/s]  4%|▎         | 360k/9.91M [00:00<00:18, 523kB/s] 13%|█▎        | 1.31M/9.91M [00:01<00:05, 1.59MB/s] 10%|▉         | 950k/9.91M [00:01<00:08, 998kB/s]   8%|▊         | 754k/9.91M [00:01<00:09, 991kB/s] 15%|█▍        | 1.47M/9.91M [00:01<00:06, 1.34MB/s] 13%|█▎        | 1.25M/9.91M [00:01<00:07, 1.15MB/s]  7%|▋         | 688k/9.91M [00:01<00:15, 587kB/s] 30%|██▉       | 2.95M/9.91M [00:01<00:02, 3.15MB/s] 22%|██▏       | 2.16M/9.91M [00:01<00:03, 2.19MB/s] 19%|█▉        | 1.90M/9.91M [00:01<00:04, 1.89MB/s] 14%|█▍        | 1.41M/9.91M [00:01<00:06, 1.25MB/s] 33%|███▎      | 3.28M/9.91M [00:01<00:02, 2.69MB/s] 28%|██▊       | 2.82M/9.91M [00:01<00:02, 2.50MB/s] 24%|██▍       | 2.39M/9.91M [00:01<00:03, 2.02MB/s] 25%|██▌       | 2.49M/9.91M [00:01<00:03, 2.26MB/s] 45%|████▍     | 4.46M/9.91M [00:02<00:01, 3.63MB/s] 35%|███▌      | 3.51M/9.91M [00:02<00:02, 2.75MB/s] 29%|██▉       | 2.88M/9.91M [00:01<00:03, 2.12MB/s] 37%|███▋      | 3.67M/9.91M [00:01<00:01, 3.14MB/s] 51%|█████     | 5.08M/9.91M [00:02<00:01, 3.45MB/s] 42%|████▏     | 4.16M/9.91M [00:02<00:01, 2.88MB/s] 34%|███▍      | 3.38M/9.91M [00:02<00:02, 2.19MB/s] 47%|████▋     | 4.65M/9.91M [00:02<00:01, 3.54MB/s] 58%|█████▊    | 5.73M/9.91M [00:02<00:01, 3.36MB/s] 49%|████▉     | 4.85M/9.91M [00:02<00:01, 3.01MB/s] 39%|███▉      | 3.87M/9.91M [00:02<00:02, 2.24MB/s] 57%|█████▋    | 5.64M/9.91M [00:02<00:01, 3.83MB/s] 64%|██████▍   | 6.36M/9.91M [00:02<00:01, 3.26MB/s] 56%|█████▌    | 5.51M/9.91M [00:02<00:01, 3.06MB/s] 44%|████▍     | 4.36M/9.91M [00:02<00:02, 2.28MB/s] 71%|███████   | 7.01M/9.91M [00:02<00:00, 3.23MB/s] 67%|██████▋   | 6.62M/9.91M [00:02<00:00, 4.04MB/s] 62%|██████▏   | 6.19M/9.91M [00:02<00:01, 3.14MB/s] 49%|████▉     | 4.85M/9.91M [00:02<00:02, 2.31MB/s] 76%|███████▌  | 7.54M/9.91M [00:03<00:00, 2.98MB/s] 71%|███████   | 7.05M/9.91M [00:02<00:00, 3.40MB/s] 69%|██████▉   | 6.85M/9.91M [00:03<00:00, 3.15MB/s] 54%|█████▍    | 5.34M/9.91M [00:03<00:01, 2.33MB/s] 83%|████████▎ | 8.19M/9.91M [00:03<00:00, 3.09MB/s] 76%|███████▌  | 7.54M/9.91M [00:03<00:00, 3.20MB/s] 84%|████████▍ | 8.32M/9.91M [00:03<00:00, 4.17MB/s] 59%|█████▉    | 5.83M/9.91M [00:03<00:01, 2.35MB/s] 87%|████████▋ | 8.65M/9.91M [00:03<00:00, 2.82MB/s] 81%|████████  | 8.03M/9.91M [00:03<00:00, 2.91MB/s] 89%|████████▊ | 8.78M/9.91M [00:03<00:00, 3.51MB/s] 64%|██████▍   | 6.32M/9.91M [00:03<00:01, 2.36MB/s] 92%|█████████▏| 9.11M/9.91M [00:03<00:00, 2.64MB/s] 88%|████████▊ | 8.75M/9.91M [00:03<00:00, 3.12MB/s] 95%|█████████▌| 9.44M/9.91M [00:03<00:00, 3.38MB/s] 69%|██████▉   | 6.82M/9.91M [00:03<00:01, 2.37MB/s] 97%|█████████▋| 9.57M/9.91M [00:03<00:00, 2.52MB/s]100%|██████████| 9.91M/9.91M [00:03<00:00, 2.52MB/s]
- 93%|█████████▎| 9.21M/9.91M [00:03<00:00, 2.85MB/s] 99%|█████████▉| 9.80M/9.91M [00:03<00:00, 2.86MB/s]100%|██████████| 9.91M/9.91M [00:03<00:00, 2.68MB/s]
- 74%|███████▎  | 7.31M/9.91M [00:03<00:01, 2.37MB/s] 98%|█████████▊| 9.70M/9.91M [00:04<00:00, 2.71MB/s]100%|██████████| 9.91M/9.91M [00:04<00:00, 2.39MB/s]
- 79%|███████▊  | 7.80M/9.91M [00:04<00:00, 2.37MB/s] 84%|████████▎ | 8.29M/9.91M [00:04<00:00, 2.38MB/s] 89%|████████▊ | 8.78M/9.91M [00:04<00:00, 2.38MB/s] 94%|█████████▎| 9.27M/9.91M [00:04<00:00, 2.38MB/s] 99%|█████████▊| 9.76M/9.91M [00:04<00:00, 2.38MB/s]100%|██████████| 9.91M/9.91M [00:04<00:00, 2.04MB/s]
-  0%|          | 0.00/28.9k [00:00<?, ?B/s]  0%|          | 0.00/28.9k [00:00<?, ?B/s]100%|██████████| 28.9k/28.9k [00:00<00:00, 146kB/s]100%|██████████| 28.9k/28.9k [00:00<00:00, 146kB/s]
-100%|██████████| 28.9k/28.9k [00:00<00:00, 138kB/s]100%|██████████| 28.9k/28.9k [00:00<00:00, 137kB/s]
-  0%|          | 0.00/28.9k [00:00<?, ?B/s]W0330 02:17:17.677000 2600 torch/distributed/elastic/agent/server/api.py:719] Received Signals.SIGINT death signal, shutting down workers
-W0330 02:17:17.678000 2600 torch/distributed/elastic/multiprocessing/api.py:897] Sending process 2665 closing signal SIGINT
-Traceback (most recent call last):
-W0330 02:17:17.678000 2600 torch/distributed/elastic/multiprocessing/api.py:897] Sending process 2666 closing signal SIGINT
-  File "/workspace/GAN-Models/model/GAN/full_script.py", line 259, in <module>
-Traceback (most recent call last):
-    mp.spawn(train, args=(world_size,), nprocs=world_size, join=True)
-  0%|          | 0.00/28.9k [00:00<?, ?B/s]  File "/venv/main/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 340, in spawn
-  File "/workspace/GAN-Models/model/GAN/full_script.py", line 259, in <module>
-
-    return start_processes(fn, args, nprocs, join, daemon, start_method="spawn")
-  File "/venv/main/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 296, in start_processes
-    while not context.join():
-  File "/venv/main/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 144, in join
-    ready = multiprocessing.connection.wait(
-  File "/usr/lib/python3.10/multiprocessing/connection.py", line 931, in wait
-    mp.spawn(train, args=(world_size,), nprocs=world_size, join=True)
-  File "/venv/main/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 340, in spawn
-    return start_processes(fn, args, nprocs, join, daemon, start_method="spawn")
-  File "/venv/main/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 296, in start_processes
-    ready = selector.select(timeout)
-  File "/usr/lib/python3.10/selectors.py", line 416, in select
-    while not context.join():
-  File "/venv/main/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 144, in join
-    fd_event_list = self._selector.poll(timeout)
-    KeyboardInterruptready = multiprocessing.connection.wait(
-
-  File "/usr/lib/python3.10/multiprocessing/connection.py", line 931, in wait
-    ready = selector.select(timeout)
-  File "/usr/lib/python3.10/selectors.py", line 416, in select
-    fd_event_list = self._selector.poll(timeout)
-KeyboardInterrupt
-[rank0]:[W330 02:17:17.799755461 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
-[rank0]:[W330 02:17:17.801235139 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
-Traceback (most recent call last):
-  File "/venv/main/bin/torchrun", line 8, in <module>
-    sys.exit(main())
-  File "/venv/main/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
-    return f(*args, **kwargs)
-  File "/venv/main/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
-    run(args)
-  File "/venv/main/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
-    elastic_launch(
-  File "/venv/main/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
-    return launch_agent(self._config, self._entrypoint, list(args))
-  File "/venv/main/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 260, in launch_agent
-    result = agent.run()
-  File "/venv/main/lib/python3.10/site-packages/torch/distributed/elastic/metrics/api.py", line 137, in wrapper
-    result = f(*args, **kwargs)
-  File "/venv/main/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 711, in run
-    result = self._invoke_run(role)
-  File "/venv/main/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 870, in _invoke_run
-    time.sleep(monitor_interval)
-  File "/venv/main/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 84, in _terminate_process_handler
-    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
-torch.distributed.elastic.multiprocessing.api.SignalException: Process 2600 got signal: 2
