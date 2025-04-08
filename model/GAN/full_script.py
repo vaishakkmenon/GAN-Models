@@ -170,18 +170,19 @@ def train(rank, world_size):
 
     # Binary cross entropy loss function used for both Discriminator and Generator
     # Optimized with Logits Loss for AMP to ensure stability
-    criterion = nn.BCEWithLogitsLoss()
+    # COMMENTING OUT BCE FOR HINGE LOSS
+    # criterion = nn.BCEWithLogitsLoss()
 
     # Set up optimizers for both models
-    # Original = 0.0002; Learning Rate = 0.0003; Trying new value
+    # Learning Rate = 0.0002;
     # Betas (0.5): Momentum term
     # Betas (0.999): Controls how quickly the optimizer adapts learning rates
     optimizer_G = optim.Adam(G.parameters(), lr=0.0002, betas=(0.5, 0.999))
     optimizer_D = optim.Adam(D.parameters(), lr=0.0002, betas=(0.5, 0.999))
 
     # Cosine annealing learning rate schedulers
-    scheduler_G = CosineAnnealingLR(optimizer_G, T_max=epochs, eta_min=1e-6)
-    scheduler_D = CosineAnnealingLR(optimizer_D, T_max=epochs, eta_min=1e-6)
+    scheduler_G = CosineAnnealingLR(optimizer_G, T_max=epochs, eta_min=1e-5)
+    scheduler_D = CosineAnnealingLR(optimizer_D, T_max=epochs, eta_min=1e-5)
 
     # AMP scalers for mixed precision training on RTX GPUs
     scaler_G = GradScaler('cuda')
@@ -213,14 +214,29 @@ def train(rank, world_size):
             # Random noise creation for generator to use
             z = torch.randn(bs, latent_dim, device=device)
 
+            # ======================
+            # BinaryCrossEntropyWithLogitsLoss
+            # ======================
+            
+            # with autocast(device_type='cuda'):
+            #     # Create fake images based on random noise
+            #     # detach(): Stops backpropagation for generator so gradients are not updated
+            #     fake_imgs = G(z).detach()
+            #     # Teach discriminator real images
+            #     real_loss = criterion(D(imgs), valid)
+            #     # Teach discriminator fake images
+            #     fake_loss = criterion(D(fake_imgs), fake)
+            #     # Combine losses into overall loss; Balances contribtion of real and fake
+            #     d_loss = (real_loss + fake_loss) / 2
+                
             with autocast(device_type='cuda'):
                 # Create fake images based on random noise
                 # detach(): Stops backpropagation for generator so gradients are not updated
                 fake_imgs = G(z).detach()
-                # Teach discriminator real images
-                real_loss = criterion(D(imgs), valid)
-                # Teach discriminator fake images
-                fake_loss = criterion(D(fake_imgs), fake)
+                # Encourage the discriminator to output large positive values for real images.
+                real_loss = torch.mean(torch.relu(1.0 - D(imgs)))
+                # Encourage the discriminator to output large negative values for fake images.
+                fake_loss = torch.mean(torch.relu(1.0 + D(fake_imgs)))
                 # Combine losses into overall loss; Balances contribtion of real and fake
                 d_loss = (real_loss + fake_loss) / 2
 
@@ -242,13 +258,27 @@ def train(rank, world_size):
             #  Train Generator
             # ======================
 
-            # Random noise creation for generator to use
-            z = torch.randn(bs, latent_dim, device=device)
+
+            # ======================
+            # BinaryCrossEntropyWithLogitsLoss
+            # ======================
+            
+            # # Random noise creation for generator to use
+            # z = torch.randn(bs, latent_dim, device=device)
+            # with autocast(device_type='cuda'):
+            #     # Generate fake images
+            #     gen_imgs = G(z)
+            #     # Pass the generated images into the Discriminator, trying to fool Discriminator
+            #     g_loss = criterion(D(gen_imgs), valid)
+                
+            # ======================
+            # Hinge Loss
+            # ======================
             with autocast(device_type='cuda'):
                 # Generate fake images
                 gen_imgs = G(z)
-                # Pass the generated images into the Discriminator, trying to fool Discriminator
-                g_loss = criterion(D(gen_imgs), valid)
+                # Generator wants D(G(z)) to be large → maximize → minimize negative
+                g_loss = -torch.mean(D(gen_imgs))
 
             # Clear out any old gradients from the previous update
             optimizer_G.zero_grad()
