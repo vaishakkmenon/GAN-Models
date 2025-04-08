@@ -176,8 +176,8 @@ def train(rank, world_size):
     # Original = 0.0002; Learning Rate = 0.0003; Trying new value
     # Betas (0.5): Momentum term
     # Betas (0.999): Controls how quickly the optimizer adapts learning rates
-    optimizer_G = optim.Adam(G.parameters(), lr=0.0003, betas=(0.5, 0.999))
-    optimizer_D = optim.Adam(D.parameters(), lr=0.0003, betas=(0.5, 0.999))
+    optimizer_G = optim.Adam(G.parameters(), lr=0.0002, betas=(0.5, 0.999))
+    optimizer_D = optim.Adam(D.parameters(), lr=0.0002, betas=(0.5, 0.999))
 
     # Cosine annealing learning rate schedulers
     scheduler_G = CosineAnnealingLR(optimizer_G, T_max=epochs, eta_min=1e-6)
@@ -318,6 +318,8 @@ def train(rank, world_size):
         plt.legend()
         plt.grid(True)
         plt.savefig("lr_schedule_plot.png")
+        
+    print("[INFO] Program Complete!")
 
 # --- Main Entry ---
 if __name__ == "__main__":
