@@ -269,7 +269,7 @@ def train(rank, world_size):
 
             if batch_idx % 100 == 0 and rank == 0:
                 print(f"[Epoch {epoch}/{epochs}] [Batch {batch_idx}/{len(train_loader)}] "
-                      f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss.item():.4f}]")
+                    f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss.item():.4f}]")
 
         scheduler_G.step()
         scheduler_D.step()
@@ -322,6 +322,9 @@ def train(rank, world_size):
 
 # --- Main Entry ---
 if __name__ == "__main__":
+    os.environ['MASTER_ADDR'] = 'localhost'
+    os.environ['MASTER_PORT'] = '12355'
+    
     world_size = 4
     print("[INFO] Launching Training")
     mp.spawn(train, args=(world_size,), nprocs=world_size, join=True)
