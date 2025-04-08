@@ -148,6 +148,7 @@ batch_size = 256
 epochs = 100
 save_dir = "generated-latest"
 checkpoint_dir = "checkpoints-latest"
+G_UPDATES_PER_D = 2  # Train generator more times than discriminator
 
 os.makedirs(save_dir, exist_ok=True)
 os.makedirs(checkpoint_dir, exist_ok=True)
@@ -189,7 +190,7 @@ def train(rank, world_size):
     scaler_D = GradScaler('cuda')
 
     # Lists to store values for plotting at the end
-    lr_history_G, lr_history_D, g_losses, d_losses = [], [], [], []
+    lr_history_G, lr_history_D, g_losses, d_losses, grad_norms_G= [], [], [], [], []
 
     for epoch in range(epochs):
         # Ensures shuffling across epochs for DistributedSampler
@@ -198,6 +199,8 @@ def train(rank, world_size):
 
         total_g_loss = 0.0
         total_d_loss = 0.0
+        total_grad_norm = 0.0
+        grad_norm_count = 0
 
         for batch_idx, (imgs, _) in enumerate(train_loader):
             imgs = imgs.view(-1, img_shape).to(device)  # Flatten and move images to device
@@ -274,31 +277,75 @@ def train(rank, world_size):
             # ======================
             # Hinge Loss
             # ======================
-            with autocast(device_type='cuda'):
-                # Generate fake images
-                gen_imgs = G(z)
-                # Generator wants D(G(z)) to be large → maximize → minimize negative
-                g_loss = -torch.mean(D(gen_imgs))
+            g_loss = 0.0
+            for _ in range(G_UPDATES_PER_D):
+                # Random noise creation for generator to use
+                z = torch.randn(bs, latent_dim, device=device)
+                with autocast(device_type='cuda'):
+                    # Generate fake images
+                    gen_imgs = G(z)
+                    # Pass the generated images into the Discriminator, trying to fool Discriminator
+                    g_loss_step = -torch.mean(D(gen_imgs))
 
-            # Clear out any old gradients from the previous update
-            optimizer_G.zero_grad()
+                # Clear out any old gradients from the previous update
+                optimizer_G.zero_grad()
+                # Scale the generator loss to amplify gradients for float16 precision
+                # Helps prevent underflow and ensures gradient signal isn't lost
+                scaler_G.scale(g_loss_step).backward()
 
-            # Scale the generator loss to amplify gradients for float16 precision
-            # Helps prevent underflow and ensures gradient signal isn't lost
-            scaler_G.scale(g_loss).backward()
+                # === Gradient Norm Logging for G ===
+                total_norm = 0.0
+                for p in G.parameters():
+                    if p.grad is not None:
+                        param_norm = p.grad.data.norm(2)
+                        total_norm += param_norm.item() ** 2
+                total_norm = total_norm ** 0.5
 
-            # Unscale the gradients and perform the optimizer step only if gradients are finite
-            scaler_G.step(optimizer_G)
+                if rank == 0 and batch_idx % 100 == 0:
+                    print(f"[Epoch {epoch}] [Batch {batch_idx}] G Grad Norm: {total_norm:.4f}")
 
-            # Adjust the scale factor for future steps based on gradient stability
-            scaler_G.update()
+                total_grad_norm += total_norm
+                grad_norm_count += 1
 
-            total_g_loss += g_loss.item()
+                scaler_G.step(optimizer_G)
+                scaler_G.update()
+
+                g_loss += g_loss_step.item()
+
+            g_loss /= G_UPDATES_PER_D
+            total_g_loss += g_loss
             total_d_loss += d_loss.item()
 
             if batch_idx % 100 == 0 and rank == 0:
                 print(f"[Epoch {epoch}/{epochs}] [Batch {batch_idx}/{len(train_loader)}] "
-                    f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss.item():.4f}]")
+                    f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss:.4f}]")
+
+            
+            # with autocast(device_type='cuda'):
+            #     # Generate fake images
+            #     gen_imgs = G(z)
+            #     # Generator wants D(G(z)) to be large → maximize → minimize negative
+            #     g_loss = -torch.mean(D(gen_imgs))
+
+            # # Clear out any old gradients from the previous update
+            # optimizer_G.zero_grad()
+
+            # # Scale the generator loss to amplify gradients for float16 precision
+            # # Helps prevent underflow and ensures gradient signal isn't lost
+            # scaler_G.scale(g_loss).backward()
+
+            # # Unscale the gradients and perform the optimizer step only if gradients are finite
+            # scaler_G.step(optimizer_G)
+
+            # # Adjust the scale factor for future steps based on gradient stability
+            # scaler_G.update()
+
+            # total_g_loss += g_loss.item()
+            # total_d_loss += d_loss.item()
+
+            # if batch_idx % 100 == 0 and rank == 0:
+            #     print(f"[Epoch {epoch}/{epochs}] [Batch {batch_idx}/{len(train_loader)}] "
+            #         f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss.item():.4f}]")
 
         scheduler_G.step()
         scheduler_D.step()
@@ -309,8 +356,12 @@ def train(rank, world_size):
         if rank == 0:
             avg_g_loss = total_g_loss / len(train_loader)
             avg_d_loss = total_d_loss / len(train_loader)
+            avg_grad_norm = total_grad_norm / grad_norm_count if grad_norm_count > 0 else 0.0
+            
             g_losses.append(avg_g_loss)
             d_losses.append(avg_d_loss)
+            grad_norms_G.append(avg_grad_norm)
+            
             lr_history_G.append(scheduler_G.get_last_lr()[0])
             lr_history_D.append(scheduler_D.get_last_lr()[0])
 
@@ -348,6 +399,16 @@ def train(rank, world_size):
         plt.legend()
         plt.grid(True)
         plt.savefig("lr_schedule_plot.png")
+        
+        # === Plot Gradient Norms ===
+        plt.figure()
+        plt.plot(grad_norms_G, label='G Gradient Norm')
+        plt.title('Generator Gradient Norm Per Epoch')
+        plt.xlabel('Epoch')
+        plt.ylabel('L2 Norm')
+        plt.legend()
+        plt.grid(True)
+        plt.savefig("grad_norm_plot.png")
         
     print("[INFO] Program Complete!")
 
