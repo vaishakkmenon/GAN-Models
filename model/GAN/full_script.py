@@ -134,10 +134,9 @@ def load_mnist_full(provided_path="mnist/", batch_size=64, num_workers=8):
     test_dataset = datasets.MNIST(data_path, train=False, transform=transform, download=True)
 
     full_dataset = ConcatDataset([train_dataset, test_dataset])
-    full_loader = DataLoader(full_dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
 
     print("[INFO] MNIST Combined Train + Test Data Loaded")
-    return full_loader
+    return full_dataset
 
 # =============================
 # Training Function (from train.py with all comments preserved)
