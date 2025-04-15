@@ -146,14 +146,9 @@ latent_dim = 100
 img_shape = 28 * 28
 batch_size = 256
 epochs = 100
-save_dir = "generated-latest"
-checkpoint_dir = "checkpoints-latest"
 G_UPDATES_PER_D = 2  # Train generator more times than discriminator
 
-os.makedirs(save_dir, exist_ok=True)
-os.makedirs(checkpoint_dir, exist_ok=True)
-
-def train(rank, world_size):
+def train(rank, world_size, save_dir="generated-latest", checkpoint_dir="checkpoints-latest"):
     # Initializes the distributed training process
     dist.init_process_group("nccl", rank=rank, world_size=world_size)
     torch.cuda.set_device(rank)
@@ -168,11 +163,6 @@ def train(rank, world_size):
     # Initialize models and wrap them with DDP
     G = DDP(Generator(latent_dim, img_shape).to(device), device_ids=[rank])
     D = DDP(Discriminator(img_shape, use_sigmoid=False).to(device), device_ids=[rank])
-
-    # Binary cross entropy loss function used for both Discriminator and Generator
-    # Optimized with Logits Loss for AMP to ensure stability
-    # COMMENTING OUT BCE FOR HINGE LOSS
-    # criterion = nn.BCEWithLogitsLoss()
 
     # Set up optimizers for both models
     # Learning Rate = 0.0002;
@@ -216,22 +206,6 @@ def train(rank, world_size):
 
             # Random noise creation for generator to use
             z = torch.randn(bs, latent_dim, device=device)
-
-            # ======================
-            # BinaryCrossEntropyWithLogitsLoss
-            # ======================
-            
-            # with autocast(device_type='cuda'):
-            #     # Create fake images based on random noise
-            #     # detach(): Stops backpropagation for generator so gradients are not updated
-            #     fake_imgs = G(z).detach()
-            #     # Teach discriminator real images
-            #     real_loss = criterion(D(imgs), valid)
-            #     # Teach discriminator fake images
-            #     fake_loss = criterion(D(fake_imgs), fake)
-            #     # Combine losses into overall loss; Balances contribtion of real and fake
-            #     d_loss = (real_loss + fake_loss) / 2
-                
             with autocast(device_type='cuda'):
                 # Create fake images based on random noise
                 # detach(): Stops backpropagation for generator so gradients are not updated
@@ -260,23 +234,7 @@ def train(rank, world_size):
             # ======================
             #  Train Generator
             # ======================
-
-
-            # ======================
-            # BinaryCrossEntropyWithLogitsLoss
-            # ======================
             
-            # # Random noise creation for generator to use
-            # z = torch.randn(bs, latent_dim, device=device)
-            # with autocast(device_type='cuda'):
-            #     # Generate fake images
-            #     gen_imgs = G(z)
-            #     # Pass the generated images into the Discriminator, trying to fool Discriminator
-            #     g_loss = criterion(D(gen_imgs), valid)
-                
-            # ======================
-            # Hinge Loss
-            # ======================
             g_loss = 0.0
             for _ in range(G_UPDATES_PER_D):
                 # Random noise creation for generator to use
@@ -319,33 +277,6 @@ def train(rank, world_size):
             if batch_idx % 100 == 0 and rank == 0:
                 print(f"[Epoch {epoch}/{epochs}] [Batch {batch_idx}/{len(train_loader)}] "
                     f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss:.4f}]")
-
-            
-            # with autocast(device_type='cuda'):
-            #     # Generate fake images
-            #     gen_imgs = G(z)
-            #     # Generator wants D(G(z)) to be large → maximize → minimize negative
-            #     g_loss = -torch.mean(D(gen_imgs))
-
-            # # Clear out any old gradients from the previous update
-            # optimizer_G.zero_grad()
-
-            # # Scale the generator loss to amplify gradients for float16 precision
-            # # Helps prevent underflow and ensures gradient signal isn't lost
-            # scaler_G.scale(g_loss).backward()
-
-            # # Unscale the gradients and perform the optimizer step only if gradients are finite
-            # scaler_G.step(optimizer_G)
-
-            # # Adjust the scale factor for future steps based on gradient stability
-            # scaler_G.update()
-
-            # total_g_loss += g_loss.item()
-            # total_d_loss += d_loss.item()
-
-            # if batch_idx % 100 == 0 and rank == 0:
-            #     print(f"[Epoch {epoch}/{epochs}] [Batch {batch_idx}/{len(train_loader)}] "
-            #         f"[D loss: {d_loss.item():.4f}] [G loss: {g_loss.item():.4f}]")
 
         scheduler_G.step()
         scheduler_D.step()
