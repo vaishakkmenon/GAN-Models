@@ -1,0 +1,7 @@
+D_lr: 0.0002
+G_UPDATES_PER_D: 2
+G_lr: 0.0002
+batch_size: 128
+discriminator_width: '[256, 128, 1]'
+latent_dim: 64
+scheduler: cosine
