@@ -319,7 +319,7 @@ def train(rank, world_size, save_dir="generated-latest", checkpoint_dir="checkpo
         plt.ylabel('Loss')
         plt.legend()
         plt.grid(True)
-        plt.savefig("loss_plot.png")
+        plt.savefig(os.path.join(save_dir, "loss_plot.png"))
 
         plt.figure()
         plt.plot(lr_history_G, label='G LR')
@@ -329,7 +329,7 @@ def train(rank, world_size, save_dir="generated-latest", checkpoint_dir="checkpo
         plt.ylabel('Learning Rate')
         plt.legend()
         plt.grid(True)
-        plt.savefig("lr_schedule_plot.png")
+        plt.savefig(os.path.join(save_dir, "lr_schedule_plot.png"))
         
         # === Plot Gradient Norms ===
         plt.figure()
@@ -339,7 +339,7 @@ def train(rank, world_size, save_dir="generated-latest", checkpoint_dir="checkpo
         plt.ylabel('L2 Norm')
         plt.legend()
         plt.grid(True)
-        plt.savefig("grad_norm_plot.png")
+        plt.savefig(os.path.join(save_dir, "grad_norm_plot.png"))
         
     print("[INFO] Program Complete!")
 
